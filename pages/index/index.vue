@@ -135,6 +135,7 @@
 			this.get_label_list()
 			console.log(op)
 			var reg = new RegExp("(^|&)" + 'token' + "=([^&]*)(&|$)");
+			console.log(reg);
 			let r = window.location.search.substr(1).match(reg);	
 			console.log(r)
 			let tok = ''
@@ -247,7 +248,7 @@
 			    if (code == null || code == "") {  
 					let appid = 'wxa41c78ae3465d0fa';	
 					let uri = encodeURIComponent(link);
-					window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
+					// window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
 			    }else {
 					let state_s = this.stateNum('state') // state
 					console.log(state_s)

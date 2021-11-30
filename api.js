@@ -1,4 +1,5 @@
 const commoneUrl  = "http://zuanshi.dis.wanheweb.com/api/"; //公共路径 
+// const commoneUrl  = "/dpc/api/"; //公共路径 
 var that = this
 //post请求封装
 function postRequest(url,data,type){

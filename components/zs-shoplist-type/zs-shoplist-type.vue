@@ -322,6 +322,7 @@
 				}
 			},
 			go_shopdetail(e) {
+				console.log(e);
 				this.com.navto('../../pages/index/shop_detail?shop_id=' + e)
 			},
 			cli_type(e) {

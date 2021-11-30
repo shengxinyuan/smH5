@@ -2,18 +2,37 @@
 	<view class="container">
 			<!-- banner轮播 -->
 			<view class="carousel">
+				<!-- 视频播放 -->
+				<template v-if="videoShow">
+					<swiper :duration="400" :interval="3000" @transition="transition">
+						<swiper-item class="swiper-item">
+							<view class="video-wrapper">
+								 <video id="myVideo" 
+								 :src="shop_det.video" 
+								 :autoplay="true" 
+								 loop 
+								 :enable-progress-gesture="false" 
+								 @pause="stop_video" 
+								 @ended="end_video"></video>
+								 
+							</view>
+						</swiper-item> 
+					</swiper>
+				</template>
+				<template v-else>
+					<swiper :hidden="autoplay" :circular="true" :autoplay="sw_autoplay" :duration="400" :interval="3000"
+						@change="swiperChange">
+						<swiper-item class="swiper-item" v-for="(item,index) in shop_det.album" :key="index"
+							@click="banner_cli(index)">
+							<view class="image-wrapper">
+								<image :src="item.img0" class="loaded" mode="aspectFill"></image>
+							</view>
+							<image v-if="shop_det.video && index == 0" class="bofang" src="/static/bofang.png" mode="">
+							</image>
+						</swiper-item>
+					</swiper>
+				</template>
 				
-				<swiper :hidden="autoplay" :circular="true" :autoplay="true" :duration="400" :interval="3000"
-					@change="swiperChange">
-					<swiper-item class="swiper-item" v-for="(item,index) in shop_det.album" :key="index"
-						@click="banner_cli(index)">
-						<view class="image-wrapper">
-							<image :src="item.img0" class="loaded" mode="aspectFill"></image>
-						</view>
-						<image v-if="shop_det.video && index == 0" class="bofang" src="/static/bofang.png" mode="">
-						</image>
-					</swiper-item>
-				</swiper>
 				<view class="swiper-dots">
 					<text class="num">{{swiperCurrent+1}}</text>
 					<text class="sign">/</text>
@@ -180,12 +199,12 @@
 		<!-- 分享 -->
 		
 		<!-- 视频弹窗 -->
-		<view class="video-popup" v-if="videoShow" @click="zanting" @touchmove.prevent>
+		<!-- <view class="video-popup" v-if="videoShow" @click="zanting" @touchmove.prevent>
 			<view class="video">
 				<video id="myVideo" :src="shop_det.video" :autoplay="true" loop muted show-play-btn controls
 					objectFit="cover" @pause="ZhanTing" @ended="ZhanTing"></video>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -195,6 +214,7 @@
 			return {
 				value: 1,
 				shop_num: 1,
+				vip_type: false, //会员状态
 				shop_type: 0, //按钮状态
 				jg_ind: '', //sku套装id
 				bgcolor: '', //背景色
@@ -225,6 +245,7 @@
 				stock: 0,
 				videoShow: false,
 				stocks: 1,
+				sw_autoplay: true,
 			};
 		},
 		
@@ -250,6 +271,14 @@
 			// console.log(options)
 			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			this.shop_id = options.shop_id;
+			let vip = uni.getStorageSync('viptype')
+			// console.log(vip)
+			// 会员
+			if (vip) {
+				this.vip_type = true
+			} else {
+				this.vip_type = false
+			}
 			this.page_render()
 		},
 		onReady: function(res) {
@@ -272,11 +301,27 @@
 				// console.log('当前值为: ' + e.value)
 				this.shop_num = e.value
 			},
+			//    视频暂停
+			stop_video() {
+				this.videoShow = false
+				this.sw_autoplay = true
+			},
+			end_video() {
+				this.videoShow = false
+				this.sw_autoplay = true
+			},
+			transition(e){
+				// console.log(e.detail.dx)
+				this.videoShow = false
+				this.sw_autoplay = true
+			},
 			page_render() {
 				this.$api.get('goods/' + this.shop_id + '?member_id=' + uni.getStorageSync("member_id")+'&is_h5=1').then(res => {
+				// this.$api.get('goods/' + this.shop_id + '?member_id=' + 378 +'&is_h5=1').then(res => {
 					// console.log(res)
 					if (res.status == 1) {
 						this.shop_det = res.data
+						
 						this.shoptype_id = res.data.id
 						this.stynumber = [{
 								name: '款号',
@@ -406,9 +451,13 @@
 			//点击轮播图放大
 			banner_cli(e) {
 				//判断有没有视频
+				console.log(e);
 				if (this.shop_det.video) {
+					console.log(111);
 					if (e == 0) { //点第一张
+					console.log(222);
 						this.videoShow = true
+						this.sw_autoplay = false
 					} else {
 						let arr = [];
 						this.shop_det.album.forEach((i, index) => {
@@ -422,6 +471,7 @@
 						});
 					}
 				} else { //没有视频图片加第一张
+				console.log(333);
 					let arr = [];
 					this.shop_det.album.forEach((i, index) => {
 						arr.push(i.img0)
@@ -533,6 +583,28 @@
 	}
 </style>
 <style lang="scss" scoped>
+	.video-popup {
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		background: rgba(0, 0, 0, .6);
+		z-index: 999;
+	
+		.video {
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+	
+			video {
+				width: 100%;
+				height: 500rpx;
+			}
+		}
+	}
 	page {
 		padding-bottom: 160upx;
 	}
@@ -623,6 +695,19 @@
 	.carousel {
 		height: 722upx;
 		position: relative;
+		.video-wrapper{
+			width: 100%;
+			height: 100%;
+			position: relative;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		// video {
+		// 	width: 750rpx;
+		// 	height: 720rpx;
+		// }
 		video{
 			width: 100%;
 			height: 724upx;

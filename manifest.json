@@ -2,8 +2,8 @@
     "name" : "奢美饰界",
     "appid" : "__UNI__A0A4AB1",
     "description" : "奢侈品交易平台",
-    "versionName" : "1.0.1",
-    "versionCode" : 101,
+    "versionName" : "1.0.2",
+    "versionCode" : 102,
     "transformPx" : false,
     /* 5+App特有相关 */
     "app-plus" : {
@@ -148,7 +148,7 @@
     },
     "h5" : {
         "title" : "奢美饰界",
-        "domain" : "http://zuanshi.dis.wanheweb.com",
+        // "domain" : "http://zuanshi.dis.wanheweb.com",
         "optimization" : {
             "treeShaking" : {
                 "enable" : false
@@ -159,7 +159,17 @@
         },
         "devServer" : {
             "port" : "",
-            "https" : true
+            "https" : false,
+            "proxy" : {
+                "/dpc" : {
+                    "target" : "http://zuanshi.dis.wanheweb.com",
+                    "changeOrigin" : true,
+                    "secure" : false,
+                    "pathRewrite" : {
+                        "^/dpc" : ""
+                    }
+                }
+            }
         },
         "router" : {
             "mode" : "hash",
