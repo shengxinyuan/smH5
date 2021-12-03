@@ -130,6 +130,9 @@
 			this.loading_more()
 		},
 		onLoad(op) {
+			
+		 //    let member_id = uni.getStorageSync('member_id')
+			// console.log(member_id);
 			//用户id
 			// let v = JSON.parse(op)
 			this.get_label_list()
@@ -140,6 +143,7 @@
 			console.log(r)
 			let tok = ''
 			if(r !== null){
+				console.log(111);
 				tok = unescape(r[2])
 				uni.setStorageSync('token',tok)
 				var reg1 = new RegExp("(^|&)" + 'name' + "=([^&]*)(&|$)");
@@ -152,6 +156,8 @@
 				this.page_render()
 				console.log(uni.getStorageSync('member_id'))
 			} else {
+				console.log(222);
+				// this.page_render()
 				this.wxAuthorize(op.data)
 			}
 			this.get_muban()
@@ -159,6 +165,7 @@
 		methods: {
 			get_muban(){
 				this.$api.get('manage',{member_id: this.name}).then(res=>{
+				// this.$api.get('manage',{member_id: 378}).then(res=>{
 					if(res.status== 1){
 						this.muban = res.data.muban
 						if (this.muban == 1) {
@@ -246,10 +253,12 @@
 			   console.log(code)
 			    // 如果拿到code，调用授权接口，没有拿到就跳转微信授权链接获取   
 			    if (code == null || code == "") {  
+					console.log(333);
 					let appid = 'wxa41c78ae3465d0fa';	
 					let uri = encodeURIComponent(link);
 					// window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
 			    }else {
+					console.log(444);
 					let state_s = this.stateNum('state') // state
 					console.log(state_s)
 					// this.stat = JSON.parse(state_s)

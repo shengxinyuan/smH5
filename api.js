@@ -15,7 +15,9 @@ function postRequest(url,data,type){
 
 			header:{	// uni.getStorageSync('token')
 				'content-type':type|| 'application/x-www-form-urlencoded',
-				'token':uni.getStorageSync('token')},
+				'token':uni.getStorageSync('token'),
+				// 'token':"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjM4NDI1NzMzLCJuYmYiOjE2Mzg0MjU3MzYsImV4cCI6MTk1Mzc4NTczMywiZGF0YSI6eyJ1aWQiOjM3OH19.93wyPM9k54oD3i-RLGO039iJTpVvzDuFMwRZ0dUs_e4"
+			},
 			success:function(res){
 				resolve(res.data);
 			},
@@ -38,7 +40,9 @@ function getRequest(url,data){
 				method:"GET",
 				dataType:'json',
 				header:{
-					'content-type': 'application/json','token':uni.getStorageSync('token')},
+					'content-type': 'application/json',
+					'token':uni.getStorageSync('token')
+				},
 				success:function(res){
 					resolve(res.data);
 				},

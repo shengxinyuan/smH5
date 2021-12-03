@@ -14,6 +14,9 @@ Vue.prototype.com = com
 import api from './api.js'
 Vue.prototype.$api = api
 
+// import util from './utils/util.js'
+// Vue.prototype.$util = util
+
 // import zsButton from './components/zs-button/zs-button.vue';
 // Vue.component('zs-button',zsButton)
 

@@ -410,6 +410,7 @@
 			if(op.data){
 				let obj = JSON.parse(op.data)
 				let mid = uni.getStorageSync('member_id')
+				// let mid = 378
 				obj.member_id = mid
 				this.datas = obj
 				if(this.datas && this.datas.cantuan !== undefined){
