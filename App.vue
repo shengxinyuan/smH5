@@ -17,7 +17,7 @@
 		},
 		onShow: function() {
 			// console.log('App Show')
-			
+			// this.$cache.set('name','wq',Date.parse(new Date()))
 		},
 		onHide: function() {
 			console.log('App Hide')

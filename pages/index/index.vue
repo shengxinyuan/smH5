@@ -130,7 +130,9 @@
 			this.loading_more()
 		},
 		onLoad(op) {
-			
+			// console.log(this.containsRepeatingLetter('eekdfhj'));
+			// console.log(this.count(1,1000));
+			// console.log(this.matchesPattern('askjflskj'));
 		 //    let member_id = uni.getStorageSync('member_id')
 			// console.log(member_id);
 			//用户id
@@ -407,6 +409,13 @@
 		},
 	}
 </script>
+
+<!-- // <script>
+// 	function isUSD(str){
+// 		return /^\$d{1,3}(,\d{3})*(\.\d{2})*$/.test(str)
+// 	}
+// 	console.log(isUSD('23980'));
+// </script> -->
 
 <style lang="scss" scoped>
 	// page{
