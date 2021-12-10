@@ -494,8 +494,8 @@
 				this.$api.get('sku', {
 					type: 0,
 					id: this.shoptype_id,
-					// member_id: uni.getStorageSync('member_id')
-					member_id: 378
+					member_id: uni.getStorageSync('member_id')
+					// member_id: 378
 				}).then(res => {
 					console.log(res)
 					if (res.status == 1) {

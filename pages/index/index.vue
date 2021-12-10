@@ -258,7 +258,7 @@
 					console.log(333);
 					let appid = 'wxa41c78ae3465d0fa';	
 					let uri = encodeURIComponent(link);
-					// window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
+					window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
 			    }else {
 					console.log(444);
 					let state_s = this.stateNum('state') // state
