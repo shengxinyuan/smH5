@@ -159,22 +159,23 @@
 			}
 		},
 		watch:{
-			timestamp(a){
-				if(this.shop_det.status == 10){
-					if(a <=0){
-						uni.navigateBack()
-					}
-				}
-			}
+			// timestamp(a){
+			// 	console.log(a);
+			// 	if(this.shop_det.status == 10){
+			// 		if(a <=0){
+			// 			uni.navigateBack()
+			// 		}
+			// 	}
+			// }
 		},
 		onLoad(op) {
-			console.log(op)
+			console.log(op,111)
 			this.order_id = op.page_type
 			this.page_reader()
 		},
 		methods:{
 			page_reader(){
-				this.$api.get('order_goods',{id:this.order_id}).then(res=>{
+				this.$api.get('order_goods',{id:this.order_id,is_h5:1}).then(res=>{
 					console.log(res)
 					if(res.status == 1){
 						this.shop_det = res.data
@@ -185,6 +186,7 @@
 						console.log(end_time) 
 						let reslut = end_time - state
 						this.timestamp = Math.floor(reslut / 1000)
+						console.log(this.timestamp);
 						for (let i in res.data.order_goods) {
 							this.all_goods_price += (((res.data.order_goods[i].total/1)-(res.data.order_goods[i].labor_price/1))/1)
 							this.all_labor_price += (res.data.order_goods[i].labor_price/1)
