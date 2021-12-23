@@ -183,8 +183,10 @@
 									￥<text>{{it.price_vip}}</text>
 								</view>
 							</view>
-							<view style="line-height: 40rpx;">
-								备注：{{it.remark || '无'}}
+							<view class="jg_sty_t" style="line-height: 40rpx;">
+								<!-- 备注：{{it.remark || '无'}} -->
+								<text style="width: 50%;">备注：{{it.remark || '无'}}</text>
+								<text style="width: 50%;">尺寸：{{it.ring_arm_size || '无'}}</text>
 							</view>
 						</view>
 						<view style="height: 180rpx;"></view>
