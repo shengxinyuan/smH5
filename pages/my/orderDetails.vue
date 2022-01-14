@@ -107,7 +107,7 @@
 							<text v-if="its.is_height == 1">工费:￥{{((its.labor_price/1)/(its.sku.weight/1)).toFixed(2)}}/g </text>
 							<text v-if="its.is_height == 2">工费：￥0.00/g</text>
 						</view>
-						<view class="price">￥{{((its.total/1)-((its.labor_price/1))).toFixed(2)}} <text>*{{its.count}}</text></view>
+						<!-- <view class="price">￥{{((its.total/1)-((its.labor_price/1))).toFixed(2)}} <text>*{{its.count}}</text></view> -->
 					</view>
 				</view>
 			</view>

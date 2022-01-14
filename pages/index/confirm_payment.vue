@@ -176,9 +176,9 @@
 									</view>
 									<view class="money-box" style="display: flex;justify-content: space-between;">
 										<view class="">
-											<text class="rmb">￥</text>
+											<!-- <text class="rmb">￥</text>
 											<text class="integer" v-if="!viptype">{{firstItem.goods_money_normal}}</text>
-											<text class="integer" v-else>{{firstItem.goods_money_vip}}</text>
+											<text class="integer" v-else>{{firstItem.goods_money_vip}}</text> -->
 										</view>
 										<view style="color: #999;">
 											*{{firstItem.order_count}}
@@ -227,9 +227,27 @@
 					<view class="first-box-six-min-v">
 						<view>
 							<text>商品金额</text>
-							<text style="font-size: 24rpx;">(含首饰盒、证书费、快递保价费等)</text>
+							<!-- <text style="font-size: 24rpx;">(含首饰盒、证书费、快递保价费等)</text> -->
 						</view>
 						<view>￥{{shop_pic}}</view>
+					</view>
+					<view class="first-box-six-min-v">
+						<view>
+							<text>包装费</text>
+						</view>
+						<view>￥{{hezi_pic}}</view>
+					</view>
+					<view class="first-box-six-min-v">
+						<view>
+							<text>证书费</text>
+						</view>
+						<view>￥{{sign_certificate}}</view>
+					</view>
+					<view class="first-box-six-min-v">
+						<view>
+							<text>保价费</text>
+						</view>
+						<view>￥{{nums_bj}}</view>
 					</view>
 					<!-- <view class="first-box-six-min-v">
 						<view>
