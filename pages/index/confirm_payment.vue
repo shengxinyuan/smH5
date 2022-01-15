@@ -229,7 +229,8 @@
 							<text>商品金额</text>
 							<!-- <text style="font-size: 24rpx;">(含首饰盒、证书费、快递保价费等)</text> -->
 						</view>
-						<view>￥{{shop_pic}}</view>
+						<view class="">￥{{shop_price}}</view>
+						<!-- <view v-else>￥{{zhanshi.money_vip}}</view> -->
 					</view>
 					<view class="first-box-six-min-v">
 						<view>
@@ -242,6 +243,12 @@
 							<text>证书费</text>
 						</view>
 						<view>￥{{sign_certificate}}</view>
+					</view>
+					<view class="first-box-six-min-v">
+						<view>
+							<text>挂签费</text>
+						</view>
+						<view>￥{{guaqian}}</view>
 					</view>
 					<view class="first-box-six-min-v">
 						<view>
@@ -338,7 +345,7 @@
 				<view class="bottom-v">
 					<view class="money-box">
 						<text class="rmb">￥</text>
-						<text class="integer">{{total <= 0? 0.01 : total.toFixed(2)}}</text>
+						<text class="integer">{{total_price <= 0? 0.01 : total_price.toFixed(2)}}</text>
 					</view>
 					<view class="bottom-v-right" >
 						<view class="right-left" v-if="viptype">
@@ -415,7 +422,7 @@
 				cli_type:true,//防抖
 				hezi_ids:0,
 				guaqian:0,
-				zhens:0
+				zhens:0,
 			}
 		},
 		onUnload() {
@@ -480,12 +487,16 @@
 			//商品价格
 			shop_price(){
 				let arr = 0
-				// if(this.viptype){
-				// 	arr = this.zhanshi.money_vip 
-				// }else{
+				if(this.viptype){
+					arr = this.zhanshi.money_vip 
+				}else{
 					arr = this.zhanshi.money
-				// }
+				}
 				return arr
+			},
+			total_price(){
+				let num = this.shop_price * 1  + this.sign_certificate * 1 + this.hezi_pic * 1 + this.guaqian * 1 + this.nums_bj * 1 + this.postage * 1
+				return num
 			},
 			//最终价格
 			zj_pic(){
@@ -695,7 +706,8 @@
 					if(res.status == 1){
 						this.zhanshi =res.data
 						this.address = res.data.address_mine //我的默认
-
+						this.sign_certificate = res.data.sign_certificate // 证书费
+						this.guaqian = res.data.sign // 挂签费
 						this.address_bier = res.data.address_not_mine
 						
 						this.hezi_pic = res.data.packing_money + JSON.parse(res.data.peijian_price) //盒子价格
@@ -705,7 +717,7 @@
 						this.freight()
 						this.baojia_cli(0)//保价
 						this.guaq(this.checked) //挂签
-						this.guaq_pic(this.checked02) //证书
+						// this.guaq_pic(this.checked02) //证书
 						this.baojia_cli(0)
 						//盒子
 						this.$api.get('accessories').then(res=>{
@@ -818,7 +830,7 @@
 				let payment_data={
 					vip:this.viptype_num,
 					menber_price:this.zhanshi.member_money,
-					shop_price:this.total <=0 ? 0.01 : this.total.toFixed(2),
+					shop_price:this.total_price <=0 ? 0.01 : this.total_price.toFixed(2),
 					
 				}
 				//送货上门

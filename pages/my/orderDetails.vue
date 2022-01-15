@@ -58,23 +58,23 @@
 		</view>
 		<!-- 商品汇总 -->
 		<view class="st_data">
-			<view class="statis">
+			<!-- <view class="statis">
 				<view class="statis_l">
 					商品汇总
 				</view>
 				<view class="statis_r">
 					共 {{shop_det.count}} 件 ￥{{all_goods_price.toFixed(2)}}
 				</view>
-			</view>
+			</view> -->
 			<!-- 工费 -->
-			<view class="statis">
+			<!-- <view class="statis">
 				<view class="statis_l">
 					工费
 				</view>
 				<view class="statis_r">
 					￥{{(all_labor_price.toFixed(2))}}
 				</view>
-			</view>
+			</view> -->
 			<view class="statis">
 				<view class="statis_l">
 					合计
@@ -101,11 +101,11 @@
 						<view class="title">{{its.title}}</view>
 						<view class="Specifications">金重：{{its.sku.weight}}g<text class="num"> 条码：{{its.sku.bar_code}}</text></view>
 						<view class="list_right_its">
-							<text v-if="its.is_height == 1">
+							<!-- <text v-if="its.is_height == 1">
 								金价：￥{{(((its.total/1)-((its.labor_price/1)))/(its.sku.weight/1)).toFixed(2)}}/g</text>
 							<text v-if="its.is_height == 2">金价：￥0.00/g</text>
 							<text v-if="its.is_height == 1">工费:￥{{((its.labor_price/1)/(its.sku.weight/1)).toFixed(2)}}/g </text>
-							<text v-if="its.is_height == 2">工费：￥0.00/g</text>
+							<text v-if="its.is_height == 2">工费：￥0.00/g</text> -->
 						</view>
 						<!-- <view class="price">￥{{((its.total/1)-((its.labor_price/1))).toFixed(2)}} <text>*{{its.count}}</text></view> -->
 					</view>
