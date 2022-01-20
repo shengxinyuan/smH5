@@ -147,32 +147,32 @@
 			// console.log(member_id);
 			//用户id
 			// let v = JSON.parse(op)
-			this.get_label_list()
-			console.log(op)
-			var reg = new RegExp("(^|&)" + 'token' + "=([^&]*)(&|$)");
-			console.log(reg);
-			let r = window.location.search.substr(1).match(reg);	
-			console.log(r)
-			let tok = ''
-			if(r !== null){
-				console.log(111);
-				tok = unescape(r[2])
-				uni.setStorageSync('token',tok)
-				var reg1 = new RegExp("(^|&)" + 'name' + "=([^&]*)(&|$)");
-				let r1 = window.location.search.substr(1).match(reg1);	
-				console.log(r1)
-				this.name = unescape(r1[2])
-				console.log(this.name)
-				uni.setStorageSync('member_id',this.name)
-				console.log('_________________________________@@@@@@@')
-				this.page_render()
-				console.log(uni.getStorageSync('member_id'))
-			} else {
-				console.log(222);
-				// this.page_render()
-				this.wxAuthorize(op.data)
-			}
-			this.get_muban()
+			// this.get_label_list()
+			// console.log(op)
+			// var reg = new RegExp("(^|&)" + 'token' + "=([^&]*)(&|$)");
+			// console.log(reg);
+			// let r = window.location.search.substr(1).match(reg);	
+			// console.log(r)
+			// let tok = ''
+			// if(r !== null){
+			// 	console.log(111);
+			// 	tok = unescape(r[2])
+			// 	uni.setStorageSync('token',tok)
+			// 	var reg1 = new RegExp("(^|&)" + 'name' + "=([^&]*)(&|$)");
+			// 	let r1 = window.location.search.substr(1).match(reg1);	
+			// 	console.log(r1)
+			// 	this.name = unescape(r1[2])
+			// 	console.log(this.name)
+			// 	uni.setStorageSync('member_id',this.name)
+			// 	console.log('_________________________________@@@@@@@')
+			// 	this.page_render()
+			// 	console.log(uni.getStorageSync('member_id'))
+			// } else {
+			// 	console.log(222);
+			// 	// this.page_render()
+			// 	this.wxAuthorize(op.data)
+			// }
+			// this.get_muban()
 		},
 		methods: {
 			get_muban(){
