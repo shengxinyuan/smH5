@@ -14,6 +14,12 @@
 				"navigationStyle": "custom"
 			}
 		}, {
+			"path": "pages/index/shop_detail_custom",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "商品详情"
+			}
+		},{
 			"path": "pages/index/nine_nav",
 			"style": {
 				"navigationStyle": "custom",
