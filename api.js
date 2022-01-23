@@ -1,5 +1,5 @@
-const commoneUrl  = "https://zuanshi.semoh.cn/api/"; //公共路径 
-// const commoneUrl  = "/dpc/api/"; //公共路径 
+const commoneUrl  = "http://zuanshi.nxm.wanheweb.com/api/"; //公共路径 
+
 var that = this
 //post请求封装
 function postRequest(url,data,type){
@@ -9,20 +9,15 @@ function postRequest(url,data,type){
 			url:commoneUrl + url,
 			data:postData,
 			method:'POST',
-			// dataType:"jsonp",
-			// jsonp:"callbackparam",//传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名
-			// jsonpCallback:"success_jsonpCallback",
-
-			header:{	// uni.getStorageSync('token')
+			header:{
 				'content-type':type|| 'application/x-www-form-urlencoded',
-				'token':uni.getStorageSync('token'),
-				// 'token':"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjM4NDI1NzMzLCJuYmYiOjE2Mzg0MjU3MzYsImV4cCI6MTk1Mzc4NTczMywiZGF0YSI6eyJ1aWQiOjM3OH19.93wyPM9k54oD3i-RLGO039iJTpVvzDuFMwRZ0dUs_e4"
+				// 'token':uni.getStorageSync('token'),
+				'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjQyOTE4NjIyLCJuYmYiOjE2NDI5MTg2MjUsImV4cCI6MTY0NTUxMDYyMiwiZGF0YSI6eyJ1aWQiOjIxMX19.S2O3F_5zFFhiqksGRRGCkJvsDQq0yYtP8Kl3fdxsd9o'
 			},
 			success:function(res){
 				resolve(res.data);
 			},
-			error:function(e)
-			{
+			error:function(e) {
 				reject('网络出错');
 			}
 		})
@@ -41,7 +36,8 @@ function getRequest(url,data){
 				dataType:'json',
 				header:{
 					'content-type': 'application/json',
-					'token':uni.getStorageSync('token')
+					// 'token':uni.getStorageSync('token')
+					'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjQyOTE4NjIyLCJuYmYiOjE2NDI5MTg2MjUsImV4cCI6MTY0NTUxMDYyMiwiZGF0YSI6eyJ1aWQiOjIxMX19.S2O3F_5zFFhiqksGRRGCkJvsDQq0yYtP8Kl3fdxsd9o'
 				},
 				success:function(res){
 					resolve(res.data);
@@ -101,10 +97,3 @@ module.exports = {
 	del: delRequest
 };
 
-// request.get('HomePageController/selectShoppingList.do',data).then(res=>{
-// 	console.log(res,444444444444444);	
-// 	this.goods = []
-// 	if(res.data.code == 200){
-// 		  this.goods = that.data.goods.concat(res.data.data)
-// 	  }
-// })  

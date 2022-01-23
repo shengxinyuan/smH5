@@ -79,7 +79,6 @@
 </template>
 
 <script>
-	// import uniNavBar from "@/components/uni-nav-bar/uni-nav-bar.vue"
 	import dragButton from "@/components/drag-button/drag-button.vue";
 	export default {
 		data() {
