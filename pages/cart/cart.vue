@@ -24,10 +24,13 @@
 									</u-checkbox>
 								</u-checkbox-group>
 							</view>
-							<view class="cart_shop_item_c" @click="go_shopdetail(it.shop_goods_id)">
+							<view class="cart_shop_item_c" v-if="it.notCustom" @click="go_shopdetail(it.shop_goods_id)">
 								<image :src="it.image" mode="aspectFill"></image>
 							</view>
-							<view class="cart_shop_item_r">
+							<view class="cart_shop_item_c" v-else @click="go_customDetail(it.id)">
+								<image :src="it.image.split(',')[0]" mode="aspectFill"></image>
+							</view>
+							<view class="cart_shop_item_r" v-if="it.notCustom">
 								<view class="it_title">
 									{{it.title}}
 								</view>
@@ -65,6 +68,11 @@
 									<view class="" v-if="it.is_height == 2">
 										工费：0.00/g
 									</view>
+								</view>
+							</view>
+							<view class="cart_shop_item_r" v-else>
+								<view class="it_title">
+									{{it.title}}
 								</view>
 							</view>
 						</view>
@@ -239,14 +247,50 @@
 			go_shopdetail(e){
 				this.com.navto('../../pages/index/shop_detail?shop_id='+e)
 			},
+			// 自定义详情
+			go_customDetail(e){
+				// TODO
+				// this.com.navto('../../pages/index/shop_detail?shop_id='+e)
+			},
 			//结算
 			skipVipConfirmOrder(){
-				let data = {
-					member_id:uni.getStorageSync('member_id'),
-					is_h5:1
+				// let data = {
+				// 	member_id:uni.getStorageSync('member_id'),
+				// 	is_h5:1
+				// }
+				// uni.navigateTo({
+				// 	url:'../index/confirm_payment?data='+ JSON.stringify(data)
+				// })
+				
+				if (!this.shop_list || !this.shop_list.data || !this.shop_list.data.length) {
+					return this.com.msg('没有选中的商品');
 				}
-				uni.navigateTo({
-					url:'../index/confirm_payment?data='+ JSON.stringify(data)
+				const custom = this.shop_list.data.filter((i) => !i.notCustom)
+				const normal = this.shop_list.data.filter((i) => i.notCustom)
+				uni.showLoading({
+					mask: true
+				})
+				Promise.all([
+					this.$api.post('shop/order/submit', {
+						isCustom: 1,
+						infos: custom,
+					}),
+					this.$api.post('shop/order/submit', {
+						isCustom: 0,
+						infos: normal,
+					})
+				]).then((res) => {
+					if (res.every((e) =>  e.status != 1)) {
+						throw new Error('')
+					}
+					uni.hideLoading()
+					this.com.navto('../my/order')
+				}).catch(() => {
+					uni.hideLoading()
+					uni.showToast({
+						icon: 'none',
+						title: '提交失败，请重试'
+					})
 				})
 			},
 			//选中删除
