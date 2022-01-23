@@ -32,11 +32,11 @@
 					<view class="toast_but_no" @click="shouh">售后服务</view> <!-- // -->
 					<view class="toast_but_pay" @click="del_order(shop_det.id,shop_det.status)">删除订单</view> <!-- // -->
 				</view>
-				<view class="toast_but_r"  v-if="shop_det.status == 60">
+				<!-- <view class="toast_but_r"  v-if="shop_det.status == 60">
 					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 1" @click="shen_details(shop_det.id)">撤销</view>
-					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 2" @click="order_logist(shop_det)">再次申请</view> <!-- // -->
-					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 3" @click="del_order(shop_det.id,shop_det.status)">删除订单</view> <!-- // -->
-				</view>
+					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 2" @click="order_logist(shop_det)">再次申请</view>
+					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 3" @click="del_order(shop_det.id,shop_det.status)">删除订单</view>
+				</view> -->
 			</view>
 		</view>
 		<!-- 地址 -->
@@ -94,7 +94,7 @@
 					待付款
 				</view> -->
 			</view>
-			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods">
+			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods" v-if="shop_det.notCustom && shop_det.order_goods">
 				<image :src="its.image" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
@@ -109,6 +109,22 @@
 						</view>
 						<!-- <view class="price">￥{{((its.total/1)-((its.labor_price/1))).toFixed(2)}} <text>*{{its.count}}</text></view> -->
 					</view>
+				</view>
+			</view>
+			<view v-if="!shop_det.notCustom && shop_det.good" class="shop_list">
+				<image v-if="shop_det.good.image" :src="shop_det.good.image.split(',')[0]" mode="aspectFill"></image>
+				<view class="list_right">
+					<view>
+						<view class="title">{{shop_det.good.title}}</view>
+						<view class="Specifications"></view>
+						<view class="list_right_its">
+						</view>
+						<!-- <view class="price">
+							<text>￥{{(shop_det.price)}}</text>
+							<text style="color: #999;"> *{{its.count}}</text>
+						</view> -->
+					</view>
+						
 				</view>
 			</view>
 			<!-- <view class="heji">
@@ -179,7 +195,7 @@
 					console.log(res)
 					if(res.status == 1){
 						this.shop_det = res.data
-						
+
 						let data = new Date()
 						let state = data.getTime()
 						let end_time = res.data.cancel_time * 1000

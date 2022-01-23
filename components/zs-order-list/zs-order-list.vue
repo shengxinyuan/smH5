@@ -15,7 +15,7 @@
 					<text class="sure" v-if="item.status == 60 && item.return_type == 3">售后成功</text> -->
 					<text class="sure" v-if="item.status ==70">已取消</text>
 				</view>
-				<view class="shop_list" v-if="item.goods">
+				<view class="shop_list" v-if="item.notCustom && item.goods">
 					<image :src="item.goods.image" mode="aspectFill" @click="order_detail(item.id)"></image>
 					<view class="list_right" @click="order_detail(item.id)">
 						<view >
@@ -32,6 +32,24 @@
 								<!-- <text>￥{{(item.total/1).toFixed(2)}}</text>
 								<text style="color: #999;"> *{{item.count}}</text> -->
 							</view>
+						</view>
+					</view>
+				</view>
+				<view v-if="!item.notCustom && item.good">
+					<view class="shop_list">
+						<image v-if="item.good.image" :src="item.good.image.split(',')[0]" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
+						<view class="list_right">
+							<view @click="order_detail(item.bn,10)">
+								<view class="title">{{item.good.title}}</view>
+								<view class="Specifications"></view>
+								<view class="shop_list_label">
+								</view>
+								<view class="price">
+									<!-- <text>￥{{(item.price)}}</text>
+									<text style="color: #999;"> *{{its.count}}</text> -->
+								</view>
+							</view>
+								
 						</view>
 					</view>
 				</view>

@@ -44,42 +44,24 @@
 					<view class="goods-down-box">
 						<view class="left">
 							<text class="sum">共1件</text>
-							<text class="profit">利润：</text>
 							<text class="price">￥754.1</text>
 						</view>
 						<view class="right" v-if="firstItem.id == 1">
 							<view class="btn-one">取消订单</view>
-							<view class="btn-two" @click="openPopup">平台下单</view>
+							<view class="btn-two" @click="goPay">支付</view>
 						</view>
 						<view class="right" v-if="firstItem.id == 2">
-							<view class="btn-one">取消订单</view>
+							<!-- <view class="btn-one">取消订单</view> -->
 							<view class="btn-there">查看物流</view>
 						</view>
 						<view class="right" v-if="firstItem.id == 3">
 							<view class="one">删除订单</view>
-							<view class="two">售后</view>
-							<view class="there">评价</view>
+							<!-- <view class="two">售后</view>
+							<view class="there">评价</view> -->
 						</view>
 					</view>
 				</view>
 			</block>
-			
-			<!-- 平台下单 弹出层 -->
-			<u-popup v-model="popupShow" mode="center" border-radius="10" :closeable="false" width="560">
-				<view class="popup-box">
-					<view class="popup-up">
-						<view class="notice">请注意！</view>
-						<view class="text">该订单买家是否通过</view>
-						<view class="text">微信、支付宝或其他线下支付方式</view>
-						<view class="text">给您付款之后再回流订单至奢美</view>
-						<view class="text">奢美不会接触您的客户</view>
-					</view>
-					<view class="popup-btn">
-						<button class="btn-one">卖家已付款，回流订单至奢美</button>
-						<button class="btn-two" @click="closePopup">买家未付款，暂不回流</button>
-					</view>
-				</view>
-			</u-popup>
 		</view>
 	</view>
 </template>
@@ -89,14 +71,18 @@
 		data() {
 			return {
 				list: [{
-						name: '全部订单'
+						name: '全部订单',
+						status: 0,
 					}, {
-						name: '待确认'
+						name: '待付款',
+						status: 10,
 					}, {
-						name: '待收货'
+						name: '待收货',
+						status: 20,
 					},
 					{
-						name: '已完成'
+						name: '已完成',
+						status: 30,
 					}
 				],
 				current: 0,
@@ -145,34 +131,15 @@
 						fractionalPart: '.05'
 					}
 				],
-				popupShow: false
 			}
 		},
 		methods: {
 			changeTabs(index) {
 				this.current = index
-				if (index !== 0) {
-					this.isShow01 = false
-				} else {
-					this.isShow01 = true
-				};
-				if (index !== 1) {
-					this.isShow02 = false
-				} else {
-					this.isShow02 = true
-				};
-				if (index !== 2) {
-					this.isShow03 = false
-				} else {
-					this.isShow03 = true
-				}
 			},
-			openPopup(){
-				this.popupShow = true
+			goPay(){
+				
 			},
-			closePopup(){
-				this.popupShow = false
-			}
 		}
 	}
 </script>

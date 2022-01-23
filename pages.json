@@ -70,7 +70,11 @@
 				"navigationBarTitleText": "我的订单",
 				"navigationStyle": "custom"
 			}
-
+        },{
+            "path" : "pages/my/payments",
+            "style" : {
+				"navigationStyle":"custom"
+			}
 		}, {
 			"path": "pages/cart/cart",
 			"style": {

@@ -29,8 +29,7 @@
  	export default { 	
  		data() {
  			return {
- 				tabs: [{name:'全部',id:0}, {name:'待确认',id:10}, {name:'待收货',id:30},
-				{name:'已完成',id:50}],
+ 				tabs: [{name:'全部',id:0}, {name:'待付款',id:10}, {name:'待收货',id:30}, {name:'已完成',id:50}],
  				list:[],
  				current: 0,
 				current_ind:0,
@@ -78,6 +77,7 @@
 					// console.log(res.data.data)
 					if(res.status == 1){
 						this.list = this.list.concat(res.data.data)
+
 						this.page_show = true
 						if(res.data.data.length < 10){
 							this.status = 'noMore'

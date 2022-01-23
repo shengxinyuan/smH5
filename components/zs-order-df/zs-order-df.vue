@@ -6,7 +6,7 @@
 					订单编号：<text class="time">{{item.bn,10}}</text> 
 					<text class="sure" v-if="item.status == 10">待付款</text>
 				</view>
-				<view v-if="item.data[0]">
+				<view v-if="item.notCustom && item.data[0]">
 					<view class="shop_list"  v-for="(its,ind) in item.data[0]">
 						<image v-if="its.goods" :src="its.goods.image" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
 						<view class="list_right" v-if="its.goods">
@@ -22,6 +22,24 @@
 								</view>
 								<view class="price">
 									<!-- <text>￥{{(its.total/1).toFixed(2)}}</text>
+									<text style="color: #999;"> *{{its.count}}</text> -->
+								</view>
+							</view>
+								
+						</view>
+					</view>
+				</view>
+				<view v-if="!item.notCustom && item.good">
+					<view class="shop_list">
+						<image v-if="item.good.image" :src="item.good.image.split(',')[0]" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
+						<view class="list_right">
+							<view @click="order_detail(item.bn,10)">
+								<view class="title">{{item.good.title}}</view>
+								<view class="Specifications"></view>
+								<view class="shop_list_label">
+								</view>
+								<view class="price">
+									<!-- <text>￥{{(item.price)}}</text>
 									<text style="color: #999;"> *{{its.count}}</text> -->
 								</view>
 							</view>
