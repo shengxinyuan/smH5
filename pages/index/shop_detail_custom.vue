@@ -84,7 +84,7 @@
 			<!-- 规格-模态层弹窗 -->
 			<u-popup v-model="popupShow" mode="bottom">
 				<scroll-view scroll-y="true" >
-					<view class="attr-content" @click.stop="stopPrevent" style="height: 300rpx;position: relative;">
+					<view class="attr-content" @click.stop style="height: 300rpx;position: relative;">
 						
 						<view style="position: fixed;bottom: 0;left: 0;right: 0;padding: 0 20rpx;background-color: #FFFFFF;">
 							<view style="margin: 20rpx 0;display: flex;align-items: center;justify-content: space-between;">
@@ -176,6 +176,7 @@
 					shop_goods_id: this.shop_id,
 					count: 1,
 				}).then(res => {
+					this.popupShow = false;
 					this.com.msg(res.message)
 				})
 			},
