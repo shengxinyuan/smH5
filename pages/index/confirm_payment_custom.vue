@@ -154,6 +154,12 @@
 			},
 			//提交订单
 			submit_order(){
+				if (!this.address.id) {
+					uni.showToast({
+						title: '下单钱请先选择收货地址！',
+					})
+					return
+				}
 				this.loading = true;
 				this.$api.post('shop/order/submit', {
 					manage_commercial_id: this.member_id,
