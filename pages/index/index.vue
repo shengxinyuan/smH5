@@ -1,10 +1,18 @@
 <template>
-	<view class="content__" v-show="pages_if">
+	<view class="content">
+
+		<!-- 自定义头部 -->
+		<view style="position: fixed;top: 0;left: 0;z-index: 999; width: 100%;"
+			:style="{ 'background-color': backgroundColor}">
+			<view class="header" :style="{ 'background-color': backgroundColor}">
+				<view class="input-view" @click="search">
+					<u-search placeholder="搜索商品" v-model="keyword" :show-action="false" :disabled="true"></u-search>
+				</view>
+			</view>
+		</view>
+
 		<view class="king_backimg">
-			<image class="imga" :src="king_user.avatar" mode="aspectFill" 
-			v-if="!king_user.image"></image>
-			<image class="imga" :src="king_user.image" mode="aspectFill" 
-			v-if="king_user.image"></image>
+			<image class="imga" :src="king_user.image || 'https://img.alicdn.com/imgextra/i3/O1CN01ywGbA51tlwYSmJGWI_!!6000000005943-0-tps-1170-859.jpg' " mode="widthFix"></image>
 			<view class="king_position">
 				<image class="imgb" :src="king_user.avatar" mode="aspectFill"></image>
 				<view class="position_name">
@@ -15,8 +23,10 @@
 		</view>
 		<!-- 内容部分 -->
 		<view>
-			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="firstList" active-color="#2d407a" inactive-color="#2d407a" font-size="30" :current="first" @change="changeFirst"></u-tabs>
-			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="secondList" active-color="#2d407a" inactive-color="#2d407a" font-size="24" :current="second" @change="changeSecond"></u-tabs>
+			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="firstList" active-color="#2d407a"
+				inactive-color="#2d407a" font-size="30" :current="first" @change="changeFirst"></u-tabs>
+			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="secondList" active-color="#2d407a"
+				inactive-color="#2d407a" font-size="24" :current="second" @change="changeSecond"></u-tabs>
 		</view>
 		<view style="padding-top: 200rpx;" v-if="shop_list.length === 0">
 			<u-empty text="暂无商品" mode="list"></u-empty>
@@ -30,7 +40,7 @@
 					<view class="title">
 						{{item.title}}
 					</view>
-					
+
 					<view class="index-cont">
 						<view class="item-sale">
 							已售{{item.sale}}件
@@ -40,9 +50,9 @@
 						</view>
 					</view>
 				</view>
-				
+
 			</view>
-			<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20"/>
+			<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20" />
 		</scroll-view>
 	</view>
 </template>
@@ -51,13 +61,14 @@
 	export default {
 		data() {
 			return {
+				search_txt: '',
 				puytcopup: 0, //普通优惠券
 				tops: 0,
 				swiperCurrent: 0,
 				swiperCurrent_b: 0,
 				backgroundColor: '', //标题栏背景色
 				headcolor: '#fff', //消息颜色
-				indexbackcolor: 'rgba(255,2555,255,0.28)', //导航栏搜索框背景色
+				indexbackcolor: 'rgba(255,2555,255,0.4)', //导航栏搜索框背景色
 				end_time: '', //秒杀到期
 				end_seckill: '00:00:00:00', //倒计时
 				nav_ind: 0, //导航
@@ -72,12 +83,11 @@
 				xrcoupon: false, //新人优惠券状态
 				second: '',
 				king_user: '',
-				pages_if: true,
-				code:'',
-				member_id:'',
-				stat:'',
+				code: '',
+				member_id: '',
+				stat: '',
 				lv: 0,
-				name:'',
+				name: '',
 				params: {},
 				filtrate: 0,
 				current_page: 1,
@@ -90,8 +100,8 @@
 				bg_tr: '#fff0d7',
 				bg_td: '#fffcf7',
 				muban: 1,
-				
-				
+
+				keyword: '',
 				shop_list: [],
 				firstList: [],
 				secondList: [],
@@ -107,7 +117,7 @@
 			}
 		},
 		onUnload() {
-			uni.setStorageSync('coupon', 0) 
+			uni.setStorageSync('coupon', 0)
 		},
 		onReachBottom() {
 			if (this.queryParams.last_page === this.queryParams.page) {
@@ -119,25 +129,40 @@
 		},
 		onLoad(op) {
 			var reg = new RegExp("(^|&)" + 'token' + "=([^&]*)(&|$)");
-			let tokenUrlQuery = window.location.search.substr(1).match(reg);	
+			let tokenUrlQuery = window.location.search.substr(1).match(reg);
 			let token = ''
-			if(tokenUrlQuery !== null){
+			if (tokenUrlQuery !== null) {
 				token = unescape(tokenUrlQuery[2])
-				uni.setStorageSync('token',token);
+				uni.setStorageSync('token', token);
 				var reg1 = new RegExp("(^|&)" + 'name' + "=([^&]*)(&|$)");
-				let nameUrlQuery = window.location.search.substr(1).match(reg1);	
+				let nameUrlQuery = window.location.search.substr(1).match(reg1);
 				console.log('nameUrlQuery', nameUrlQuery)
 				this.member_id = unescape(nameUrlQuery[2])
 				this.getAllCategory();
-				uni.setStorageSync('member_id',this.member_id)
+				uni.setStorageSync('member_id', this.member_id)
 				this.query_member_info()
 			} else {
 				this.wxAuthorize(op.data)
 			}
-			// this.get_muban()
-			
+		},
+		onPageScroll(e) {
+			if (e.scrollTop > this.myScroll) {
+				this.isTop = 1
+			} else {
+				this.isTop = 0
+			}
+			this.backgroundColor = 'rgba(255,255,255,' + e.scrollTop / 180 + ')'
+			this.headcolor = 'rgba(0,0,0,' + e.scrollTop / 180 + ')'
+			this.indexbackcolor = 'rgba(248,248,248,' + e.scrollTop / 180 + ')' //导航栏搜索框背景色
+			if (e.scrollTop < 40) {
+				this.headcolor = '#fff'
+				this.indexbackcolor = 'rgba(255,2555,255,0.2)' //导航栏搜索框背景色
+			}
 		},
 		methods: {
+			search() {
+				this.com.navto('./search');
+			},
 			getAllCategory() {
 				uni.showLoading({
 					mask: true
@@ -149,18 +174,20 @@
 					if (res.status == 1) {
 						this.firstList = res.data;
 						this.secondList = this.firstList[this.first].children;
-						this.isCustom = this.firstList[this.first] && this.firstList[this.first].member_id > 0 ? 1 : 0;
+						this.isCustom = this.firstList[this.first] && this.firstList[this.first].member_id > 0 ?
+							1 : 0;
 						this.queryList();
 					}
 				}).catch(() => {
 					uni.hideLoading()
 				})
 			},
-			queryList () {
+			queryList() {
 				if (this.isCustom === 1) {
 					this.$api.get('shop/getAllGood', {
 						cate_id: this.firstList[this.first].id,
-						cate_second_id: this.secondList && this.secondList[this.second] && this.secondList[this.second].id,
+						cate_second_id: this.secondList && this.secondList[this.second] && this.secondList[this
+							.second].id,
 						member_id: this.member_id,
 						sale: 1,
 						price: 1,
@@ -169,7 +196,9 @@
 					}).then((res) => {
 						uni.hideLoading()
 						if (res.status == 1) {
-							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...res.data.data];
+							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...
+								res.data.data
+							];
 							this.queryParams.last_page = res.data.last_page;
 							this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
 						}
@@ -179,14 +208,17 @@
 				} else {
 					this.$api.get('shop/getSurmerGood', {
 						cate_first_id: this.firstList[this.first].id,
-						cate_id: this.secondList && this.secondList[this.second] && this.secondList[this.second].id,
+						cate_id: this.secondList && this.secondList[this.second] && this.secondList[this.second]
+							.id,
 						member_id: this.member_id,
 						page: this.queryParams.page,
 						limit: this.queryParams.limit,
 					}).then((res) => {
 						uni.hideLoading()
 						if (res.status == 1) {
-							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...res.data.data];
+							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...
+								res.data.data
+							];
 							this.queryParams.last_page = res.data.last_page;
 							this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
 						}
@@ -196,7 +228,7 @@
 				}
 			},
 			// 一级目录切换
-			changeFirst (index) {
+			changeFirst(index) {
 				this.first = index;
 				this.isCustom = this.firstList[index] && this.firstList[index].member_id > 0 ? 1 : 0;
 				this.second = 0;
@@ -207,20 +239,19 @@
 				}, 0)
 			},
 			// 二级目录切换
-			changeSecond (index) {
+			changeSecond(index) {
 				this.second = index;
 				this.queryParams.page = 1;
 				setTimeout(() => {
 					this.queryList();
 				}, 0)
 			},
-			go_shopdetail (item) {
+			go_shopdetail(item) {
 				if (this.isCustom) {
 					this.com.navto('../../pages/index/shop_detail_custom?shop_id=' + item.id)
 				} else {
 					this.com.navto('../../pages/index/shop_detail?shop_id=' + item.id)
 				}
-				
 			},
 			//code
 			GetQueryString(code) {
@@ -236,36 +267,41 @@
 				if (r != null) return unescape(r[2]);
 				return null;
 			},
-			wxAuthorize(a) {  
-			   let link =  window.location.href;  
-			   let code =  this.GetQueryString('code') // code
-			   console.log(code)
-			    // 如果拿到code，调用授权接口，没有拿到就跳转微信授权链接获取   
-			    if (code == null || code == "") {  
-					let appid = 'wxa41c78ae3465d0fa';	
+			wxAuthorize(a) {
+				let link = window.location.href;
+				let code = this.GetQueryString('code') // code
+				console.log(code)
+				// 如果拿到code，调用授权接口，没有拿到就跳转微信授权链接获取   
+				if (code == null || code == "") {
+					let appid = 'wxa41c78ae3465d0fa';
 					let uri = encodeURIComponent(link);
-					window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
-			    }else {
+					window.location.href =
+						`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
+				} else {
 					let state_s = this.stateNum('state') // state
 					this.stat = JSON.parse(a)
 					//店铺用户id
-					if(this.stat.name){
+					if (this.stat.name) {
 						console.log(this.stat)
-						uni.setStorageSync('member_id',this.stat.name)
+						uni.setStorageSync('member_id', this.stat.name)
 						console.log(code)
-						this.$api.get('wechat_login',{code:code}).then(res=>{
+						this.$api.get('wechat_login', {
+							code: code
+						}).then(res => {
 							console.log(res.message)
-							if(res.status== 1){
-								uni.setStorageSync('token',res.data.token)
+							if (res.status == 1) {
+								uni.setStorageSync('token', res.data.token)
 								this.labels = 1
 								this.query_member_info()
 							}
-						})	
+						})
 					}
-			    }  
+				}
 			},
 			query_member_info() {
-				this.$api.get('manageh5', {member_id: uni.getStorageSync('member_id')}).then(res => {
+				this.$api.get('manageh5', {
+					member_id: uni.getStorageSync('member_id')
+				}).then(res => {
 					console.log(res)
 					if (res.status == 1) {
 						this.king_user = res.data
@@ -277,9 +313,30 @@
 </script>
 
 <style lang="scss" scoped>
+.header{
+	position: fixed;left: 0;top: 0;
+	height: 120rpx;
+	width: 100%;
+	padding: 20rpx 0;
+	z-index: 999;
+	.input-view {
+		display: flex;
+		flex-direction: row;
+		height: 60rpx;
+		border-radius: 15px;
+		padding: 0 15px;
+		flex-wrap: nowrap;
+		margin: 7px 30rpx;
+		line-height: 60rpx;
+	}
+	.rig{
+		width: 18%;
+		line-height: 94rpx;text-align: center;
+		font-size: 26rpx;padding-right: 20rpx;
+	}
+}
 	.king_backimg {
 		width: 750upx;
-		height: 360upx;
 		position: relative;
 
 		.imga {
@@ -349,10 +406,11 @@
 		margin-bottom: 50rpx;
 		background-color: #F6F6F6;
 	}
-	
+
 	.goods-list {
 		width: 100%;
 		border-top: 1px solid #eee;
+
 		.cont_item {
 			margin: 0 32rpx;
 			background-color: white;
@@ -361,11 +419,13 @@
 			align-items: center;
 			border-bottom: 1px solid #eee;
 			color: rgb(96, 98, 102);
+
 			.img-box {
 				margin: 20rpx 0;
 				margin-right: 32rpx;
 				width: 200rpx;
 				height: 200rpx;
+
 				.images {
 					display: block;
 					width: 200rpx;
@@ -374,10 +434,12 @@
 					display: block;
 				}
 			}
+
 			.base-cont {
 				flex: 1;
 				overflow: hidden;
 				font-size: 24rpx;
+
 				.title {
 					font-size: 32rpx;
 					margin-bottom: 10rpx;
@@ -385,16 +447,19 @@
 					color: #414141;
 				}
 			}
+
 			.index-cont {
 				display: flex;
 				font-size: 24rpx;
 				text-align: right;
 				font-size: 30rpx;
+
 				.item-sale {
 					width: 400rpx;
 					text-align: left;
 					font-size: 24rpx;
 				}
+
 				.price {
 					flex: 1;
 					text-align: right;
@@ -403,5 +468,4 @@
 			}
 		}
 	}
-
 </style>
