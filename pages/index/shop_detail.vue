@@ -213,13 +213,6 @@
 			</view>
 		<!-- 分享 -->
 		
-		<!-- 视频弹窗 -->
-		<!-- <view class="video-popup" v-if="videoShow" @click="zanting" @touchmove.prevent>
-			<view class="video">
-				<video id="myVideo" :src="shop_det.video" :autoplay="true" loop muted show-play-btn controls
-					objectFit="cover" @pause="ZhanTing" @ended="ZhanTing"></video>
-			</view>
-		</view> -->
 	</view>
 </template>
 

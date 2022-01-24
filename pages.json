@@ -190,6 +190,12 @@
 				"navigationStyle": "custom"
 			}
 		}, {
+			"path": "pages/index/confirm_payment_custom",
+			"style": {
+				"navigationBarTitleText": "确认订单",
+				"navigationStyle": "custom"
+			}
+		}, {
 			"path": "pages/index/payment_order",
 			"style": {
 				"navigationBarTitleText": "支付",

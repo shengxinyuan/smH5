@@ -166,9 +166,8 @@
 				let data = {
 					goods_id: this.shop_id,
 					count: this.buy_num,
-					isCustom: 1,
 				}
-				this.com.navto('./confirm_payment?data=' + JSON.stringify(data));
+				this.com.navto('./confirm_payment_custom?data=' + JSON.stringify(data));
 			},
 			//加购物车
 			addCart () {
