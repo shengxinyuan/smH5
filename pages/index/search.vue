@@ -1,43 +1,64 @@
 <template>
 	<view class="box">
 		<!-- 搜索框 -->
-		<uni-nav-bar background-color="#fff" style="align-items: center;">
-			<view slot="left" @click="back"><u-icon name="arrow-left" size="48"></u-icon></view>
-			<view class="zl-box">
-			    <input type="text" value="" placeholder="名称搜索" v-model="search_s" @confirm="go_search(search_s)"/>
+		<view class="header">
+			<view class="input-view">
+				<u-search placeholder="搜索商品" v-model="keyword" :show-action="false" @search="go_search" @clear="clear" @change="get_data"></u-search>
 			</view>
-			<view slot="right" class="zl-search-btn" @click="go_search(search_s)">搜索</view>
-		</uni-nav-bar>
-		
-			<!-- 历史搜索 -->
-			<view v-if="shop_tuij == ''">
-				<view v-if="history.length !=0" style="width: 100%;">
+		</view>
+		<!-- 历史搜索 -->
+		<view class="history-cont">
+			<template >
+				<view style="width: 100%;">
 					<view class="zl-history-box">
 						<view class="zl-history">
 							<text>历史搜索</text>
 						</view>
-						<u-icon name="trash" @click="deles" size="44"></u-icon>
+						<u-icon v-if="history.length > 0" name="trash" @click="deles" size="40"></u-icon>
 					</view>
-						<!-- 内容 -->
+					<!-- 内容 -->
 					<view class="zl-search-history">
 						<text v-for="(item,index) in history" :key="index" @click="again(item)">{{item}}</text>
 					</view>
 				</view>
-				
-				<!-- 热门搜索 -->
-				<!-- <view>
-					<view class="zl-search-hot">
-						<view class="zl-hot-title">
-							<text>热门搜索</text>
+			</template>
+		</view>	
+		
+		<!-- 搜索结果 -->
+		<view>
+			<template >
+				<view style="width: 100%;">
+					<view class="zl-history-box">
+						<view class="zl-history">
+							<text>搜索结果</text>
 						</view>
 					</view>
-					<view class="zl-hot-text">
-						<text v-for="(item,index) in search_hot" @click="again(item)" :key="index">{{item}}</text>
+					<scroll-view scroll-y="true" class="goods-list" v-if="shop_list.length > 0">
+						<view class="cont_item" v-for="(item,i) in shop_list" :key="i" @click="go_shopdetail(item)">
+							<view class="img-box">
+								<image class="images" :src="item.image" mode="aspectFit"></image>
+							</view>
+							<view class="base-cont">
+								<view class="title">
+									{{item.title}}
+								</view>
 						
-					</view>
-				</view> -->
-			</view>
-			<zs-shopping-list :shop_list="shop_tuij"></zs-shopping-list>
+								<view class="index-cont">
+									<view class="item-sale">
+										已售{{item.sale}}件 库存{{item.stock}}件
+									</view>
+									<view class="price">
+										<text><text style="">￥</text>{{item.price}}</text>
+									</view>
+								</view>
+							</view>
+						</view>
+						<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20"/>
+					</scroll-view>
+				</view>
+			</template>
+		</view>	
+		
 	</view>
 </template>
 
@@ -45,194 +66,249 @@
 	export default {
 		data() {
 			return {
-				// search_hot:["大型犬狗粮","幼犬狗粮","狗粮","大型犬狗粮","大型犬狗粮"],
-				search_s:"",//搜索关键字
-				history:[],//搜索历史
-				shop_tuij:'',
-				shop_list:[],
-				list:'',
-				nav_ind:0
+				keyword: '',
+				history: [], //搜索历史
+				shop_list: [],
+				key: '',
+				member_id: '',
+				queryParams: {
+					page: 1,
+					limit: 20,
+					last_page: 1
+				},
+				moreStatus: 'loadmore',
 			}
 		},
-		onLoad() {
-			if( uni.getStorageSync('neirong')){
-				let aq = uni.getStorageSync('neirong')
-				this.history =JSON.parse(aq)
+		onReachBottom() {
+			if (this.queryParams.last_page === this.queryParams.page) {
+				return;
+			} else {
+				this.queryParams.page += 1;
+				this.get_data();
 			}
-			// //推荐商品
-			// this.$api.get('hotgoods').then(res=>{
-			// 	console.log(res)
-			// 	if(res.status == 1){
-			// 		this.shop_tuij = res.data
-			// 	}
-			// })
+		},
+		onLoad(e) {
+			this.member_id = uni.getStorageSync('member_id');
 		},
 		methods: {
-			
-			back(){
-				uni.navigateBack()
+			go_shopdetail(item) {
+				this.com.navto('../../pages/index/shop_detail?shop_id=' + item.id)
+				// if (this.isCustom) {
+				// 	this.com.navto('../../pages/index/shop_detail_custom?shop_id=' + item.id)
+				// } else {
+				// }
 			},
-			go_search(key){
-				console.log(key)
-				if(this.search_s== ""){
+			go_search(value) {
+				this.shop_list = [];
+				this.queryParams.page = 1;
+				if (value === '') {
 					this.com.msg('搜索内容不能为空')
-					
-				}else{
-					this.$api.post('goods',{key:key}).then(res=>{
-						console.log(res)
-						if(res.status == 1){
-							this.shop_tuij = res.data.data
-							if(res.data.data.length == 0){
-								this.com.msg('暂无该类商品')
-							}
-						}
-					})
-					if(this.history.indexOf(this.search_s) == -1){
-						this.history.unshift(this.search_s)  //unshift:跟push性质一样 区别就是将新添加的数据放在第一位
+				} else {
+					if (this.history.indexOf(value) == -1) {
+						this.history.unshift(value)
 					}
-					if(this.history.length > 8){
+					if (this.history.length > 8) {
 						this.history.pop()
 					}
-					uni.setStorage({
-						key: 'neirong',
-						data: JSON.stringify(this.history)//转换为字符串形式
-					})
+					this.get_data();
 				}
 			},
+			// 清空
+			clear () {
+				this.shop_list = [];
+				this.queryParams.page = 1;
+			},
+			
 			// 删除搜索历史
-			deles(){
-				let that = this
+			deles() {
 				uni.showModal({
-				    title: '提示',
-				    content: '确定要删除历史搜索吗',
-				    success: function (res) {
-				        if (res.confirm) {
-							
-							that.history =[]
+					title: '提示',
+					content: '确定要删除历史搜索吗',
+					success: (res) => {
+						if (res.confirm) {
+							this.history = []
 							uni.removeStorage({
 								key: 'neirong',
 								success: function(res) {
 									uni.showToast({
-										title:'清空成功'
+										title: '清空成功'
 									})
 								}
 							});
-				        }
-				    }
+						}
+					}
 				});
-				
 			},
+			
 			// 点击搜索历史再次搜索
-			again(item){
-				this.search_s = item
-				this.go_search(item)
-			}
+			again(value) {
+				this.keyword = value;
+				this.queryParams.page = 1;
+				this.get_data();
+			},
+			
+			get_data(value){
+				if (this.keyword === '') {
+					return
+				}
+				uni.showLoading()
+				this.$api.post('goods', {
+					key: this.keyword,
+					page: this.queryParams.page
+				}).then(res => {
+					if (res.status === 1) {
+						if (res.data.data) {
+							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...res.data.data];
+							this.queryParams.last_page = res.data.last_page;
+							this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
+						}
+						uni.hideLoading()
+					}
+				})
+			},
 		}
 	}
 </script>
-
+<style>
+	page {
+		background-color: #F6F6F6;
+	}
+</style>
 <style lang="scss" scoped>
-	.imgs{
-		width: 100%;height: 100rpx;margin-top: 40rpx;
-		image{
-			width: 100%;height: 100%;
-		}
-	}
-	.box{
+	.header {
+		position: fixed;
+		left: 0;
+		top: 0;
+		height: 120rpx;
 		width: 100%;
-
-	}
-	
-	.zl-box{
-		width: 90%;
-		display: flex;
-		border:2rpx solid #df0000;
-		border-radius: 50rpx;
-		
-		input{
-			border-radius: 50rpx;
+		padding: 20rpx 0;
+		background-color: #fff;
+		z-index: 999;
+		.input-view {
+			display: flex;
+			flex-direction: row;
 			height: 60rpx;
-			padding-left: 30rpx;
+			border-radius: 15px;
+			padding: 0 15px;
+			flex-wrap: nowrap;
+			margin: 7px 30rpx;
+			line-height: 60rpx;
 		}
 	}
-	.zl-search{
-		padding-left: 30upx;
-		border-style: solid;
-		border-color: #df0000;
-		border-radius: 50upx;
-		border-width: 4upx;
-		margin: 15upx 0 0 0;
-		height: 60upx;
+	
+	.history-cont {
+		margin-top: 70px;
 	}
 	
-	.zl-search-btn{
-		border-radius: 40rpx;
-		background-color: #cf0000;
-		color: #ffffff;
-		padding: 0 20rpx;
-		height: 60rpx;
-		line-height: 60rpx;
-		font-size: 28rpx;
-		display: flex;
+	.imgs {
+		width: 100%;
+		height: 100rpx;
+		margin-top: 40rpx;
+
+		image {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.box {
 		width: 100%;
 	}
-	
-	.zl-history-box{
+
+	.zl-history-box {
 		width: 100%;
 		display: flex;
-		padding: 20upx 30upx;
+		padding: 10upx 30upx;
 		justify-content: space-between;
 	}
-	
-	.zl-history{
+
+	.zl-history {
 		height: 60upx;
-		font-size: 32upx;
+		font-size: 30upx;
 		font-weight: bold;
 		line-height: 60upx;
 	}
-	
-	.zl-delete{
-		width: 40upx;
-		height: 40upx;
-	}
-	
-	.zl-search-history{
-		display: flex; 
+
+	.zl-search-history {
+		display: flex;
+		align-items: center;
 		flex-wrap: wrap;
-		padding: 0 50rpx;
-		text{
-			background-color: #f3f3f3;
-			margin: 15upx;
-			padding: 0 25upx;
+		padding: 0 30rpx;
+
+		text {
+			background-color: #fff;
+			padding: 0 20upx;
+			margin-right: 20rpx;
+			margin-bottom: 20rpx;
 			text-align: center;
 			border-radius: 40upx;
 			max-width: 200rpx;
-			height: 60rpx;line-height: 60rpx;
+			height: 50rpx;
+			line-height: 50rpx;
 			display: inline-block;
-			white-space: nowrap;text-overflow: ellipsis;overflow: hidden;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
 		}
 	}
 
+	.goods-list {
+		width: 100%;
+		background-color: #fff;
+		.cont_item {
+			margin: 0 32rpx;
+			background-color: white;
+			overflow: hidden;
+			display: flex;
+			align-items: center;
+			border-bottom: 1px solid #eee;
+			color: rgb(96, 98, 102);
 	
-	.zl-search-hot{
-		display: flex;
-		padding: 20upx 30upx;
-	}
+			.img-box {
+				margin: 20rpx 0;
+				margin-right: 32rpx;
+				width: 100rpx;
+				height: 100rpx;
 	
-	.zl-hot-title{
-		width: 80%;
-		height: 60upx;
-		font-size: 32upx;
-		font-weight: bold;
-		line-height: 60upx;
-	}
+				.images {
+					display: block;
+					width: 100rpx;
+					height: 100rpx;
+					border-radius: 10rpx;
+					display: block;
+				}
+			}
 	
-	.zl-hot-text text{
-		background-color: #f3f3f3;
-		margin: 20upx 20upx;
-		padding: 12upx 50upx;
-		line-height: 40upx;
-		border-radius: 40upx;
-		display: inline-block;
+			.base-cont {
+				flex: 1;
+				overflow: hidden;
+				font-size: 24rpx;
+	
+				.title {
+					font-size: 28rpx;
+					margin-bottom: 10rpx;
+					color: #414141;
+				}
+			}
+	
+			.index-cont {
+				display: flex;
+				font-size: 24rpx;
+				text-align: right;
+				font-size: 30rpx;
+	
+				.item-sale {
+					width: 400rpx;
+					text-align: left;
+					font-size: 24rpx;
+				}
+	
+				.price {
+					flex: 1;
+					text-align: right;
+					color: #ea5b72;
+				}
+			}
+		}
 	}
 </style>
