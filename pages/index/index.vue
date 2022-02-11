@@ -302,7 +302,7 @@
 				this.$api.get('manageh5', {
 					member_id: uni.getStorageSync('member_id')
 				}).then(res => {
-					console.log(res)
+					console.log(res.data)
 					if (res.status == 1) {
 						this.king_user = res.data
 					}
