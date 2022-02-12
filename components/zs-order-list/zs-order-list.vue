@@ -7,6 +7,7 @@
 					
 					<text class="sure" v-if="item.status == 10">待付款</text>
 					<text class="sure" v-if="item.status == 20">待发货</text>
+					<text class="sure" v-if="item.status == 25">商家已确认收款，待发货</text>
 					<text class="sure" v-if="item.status == 30">待收货</text>
 					<text class="sure" v-if="item.status == 40">待评价</text>
 					<text class="sure" v-if="item.status == 50">已完成</text>
@@ -44,14 +45,19 @@
 						<view>合计:<text class="money">￥{{item.total}}</text></view>
 					</view>
 					<view class="foot_child">
-						<view class="go_buy_s" v-if="item.status == 10 && item.order_type === '0'" @click="no_order(item.id,index)">取消订单</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 10" @click="order_detail(item)">去支付</view> <!-- // -->
-						<view class="go_buy_s" v-if="item.status == 30" @click="order_logist_wl(item.bn_id)">查看物流</view>
-						<view class="go_buy" v-if="item.status == 30" @click="sure_details(item.id)">确认收货</view> <!-- // -->
+						<view class="go_buy_s" v-if="item.status == 10 && item.order_type === '0'" @click="no_order(item.id,index)">取消订单</view>
+						<view class="go_buy" v-if="item.status == 10" @click="order_detail(item)">去支付</view>
+						
+						<view class="go_buy_s" v-if="item.status == 30 && item.order_type === '0'" @click="order_logist_wl(item.bn_id)">查看物流</view>
+						<view class="go_buy" v-if="item.status == 30 && item.order_type === '0'" @click="sure_details(item.id)">确认收货</view>
+						
+						<!-- <view class="go_buy_s" v-if="item.status == 30 && item.order_type === '0'" @click="order_logist_wl(item.bn_id)">查看物流</view> -->
+						<view class="go_buy" v-if="item.status == 30 && item.order_type === '1'" @click="order_detail(item)">确认收货</view>
+						
 						<view class="go_buy" v-if="item.status == 40" @click="go_immed(item)">立即评价</view>
-						<view class="go_buy_s" v-if="item.status == 50" @click="del_order(item.id,item.status)">删除订单</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 60 && item.return_type == 2" @click="shouh">再次申请</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 60 && item.return_type == 3" @click="del_order(item.id,item.status)">删除订单</view> <!-- // -->
+						<view class="go_buy_s" v-if="item.status == 5 && item.order_type === '0'" @click="del_order(item.id,item.status)">删除订单</view>
+						<view class="go_buy" v-if="item.status == 60 && item.return_type == 2" @click="shouh">再次申请</view>
+						<view class="go_buy" v-if="item.status == 60 && item.return_type == 3" @click="del_order(item.id,item.status)">删除订单</view>
 					</view>
 				</view>
 			</view>
