@@ -12,9 +12,7 @@
 			<view v-if="list.length != 0">
 				<zs-order-list :list="list" @order_detail="order_detail" v-if="current_ind != 1" @del_order="del_order"></zs-order-list>
 				<zs-order-df :list="list" @order_detail="order_detail" @cancel_detail="cancel_detail" v-else></zs-order-df>
-				<view style="width: 100%;height: 80rpx;">
-					<uni-load-more :status="status" :content-text="contentText"></uni-load-more>
-				</view>
+				<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20"/>
 			</view> 
 			<view v-else style="padding-top: 25%;"><u-empty text="暂无该类订单" mode="order"></u-empty> </view> 
  		</view>
@@ -32,112 +30,79 @@
  				tabs: [{name:'全部',id:0}, {name:'待付款',id:10}, {name:'待收货',id:30}, {name:'已完成',id:50}],
  				list:[],
  				current: 0,
-				current_ind:0,
  				isShow: true,
 				page:1,
 				page_show:false,
-				status: 'more',
-				statusTypes: [{
-					value: 'more',
-					text: '加载前'
-				}, {
-					value: 'loading',
-					text: '加载中'
-				}, {
-					value: 'noMore',
-					text: '没有更多'
-				}],
-				contentText: {
-					contentdown: '查看更多',
-					contentrefresh: '加载中',
-					contentnomore: '没有更多'
+				queryParams: {
+					page: 1,
+					limit: 20,
+					last_page: 1
 				},
+				moreStatus: 'loadmore',
+				member_id: ''
  			}
  		},
  		onLoad(op) {
-			console.log(op)
-			this.current = op.state
+			this.member_id = uni.getStorageSync('member_id');
+			
+			this.state = op.state
 			this.current_ind = op.index
 			this.tabClick(0)
  		},
 		onReachBottom() {
-			this.status = 'loading'
-			this.page++
-			this.page_cont(this.page)
+			if (this.queryParams.last_page === this.queryParams.page) {
+				return;
+			} else {
+				this.queryParams.page += 1;
+				this.queryList();
+			}
 		},
  		methods: {
-			//上拉加载
-			swiper_but(e){
-				this.page++
-				this.page_cont(this.page)
-			},
-			
-			page_cont(e){
-				this.$api.get('orders',{page:e,status:this.current,is_h5:1}).then(res=>{
-					// console.log(res.data.data)
-					if(res.status == 1){
-						this.list = this.list.concat(res.data.data)
-
-						this.page_show = true
-						if(res.data.data.length < 10){
-							this.status = 'noMore'
-							return false
-						}
+			queryList(e){
+				this.$api.get('shop/order/getAllOrder',{
+					page:e,
+					status: this.current,
+					limit: 10,
+					manage_commercial_id: this.member_id
+				}).then(res => {
+					if(res.status === 1){
+						this.page_show = true;
+						this.list = this.queryParams.page === 1 ? res.data.data : [...this.list, ...res.data.data];
+						this.queryParams.last_page = res.data.last_page;
+						this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
+						console.log(this.list)
 					}
-					//时间
-					if(this.current_ind == 1 && res.data.data){
-						var date = new Date()
-						var nowTime = date.getTime(); // 当前时间的时间戳
-						res.data.data.forEach(i=>{
-							// console.log(i)
-							i.data[0].forEach(j=>{
-								let arr = j.end_time*1000
-								if(nowTime >= arr){
-									this.$api.put('orders',{id:i.id,status:10,type:2}).then(res=>{
-										console.log(res)
-										if(res.status == 1){
-											this.com.redto('./order?state='+ 20 +'&index='+ 2)
-										}else{
-											this.com.msg(res.message)
-										}
-									})
-								}
-							})
-						})
-					}
+					
 				})
 			},
 			//订单详情
-			order_detail(e,status){
-				this.com.navto('./orderDetails?page_type='+e+'&status='+status)
+			order_detail({id, order_type, bn_id}){
+				this.com.navto(`./orderDetails?order_id=${ order_type === '1' ? bn_id : id}&order_type=${order_type}`)
 			},
 			cancel_detail(e,i){
 				this.$api.put('orders',{id:e,type:2,is_h5:1}).then(res=>{
 					this.com.msg(res.message)
-					if(res.status == 1){
+					if(res.status === 1){
 						this.list.splice(i,1)
 					}
 				})
 			},
 			//页面滑动
 			page_swiper(e){
-				// console.log(e)
 				this.page_show = false
 				this.page = 1
 				this.list = []
 				this.current_ind = e.detail.current
-				this.current = this.current_ind *10
-				this.page_cont(this.page)
+				this.queryList(this.page)
 			},
 			// 点击上方状态按钮
  			tabClick(id,index) {
-				// console.log(index)
 				this.page_show = false
 				this.page = 1
 				this.list = []
  				this.current = id
 				this.current_ind = index
-				this.page_cont(this.page)
+				this.queryList(this.page)
  			},
  			//删除
 			del_order(e){

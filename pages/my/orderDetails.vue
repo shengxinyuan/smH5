@@ -11,17 +11,17 @@
 		<text class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 2">已拒绝</text>
 		<text class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 3">售后成功</text>
 		<view class="toast_order" v-if="shop_det.status != 20">
-			<view class="toast_title" v-if="shop_det.status == 10">
-				超时未支付订单将自动取消
-			</view>
 			<view class="toast_but">
 				<view></view>
 				<view class="toast_but_r"  v-if="shop_det.status == 10">
-					<view class="toast_but_no" @click="no_order(shop_det.id)">
+					<view class="toast_but_no" v-if="order_type == '0'" @click="no_order(shop_det.id)">
 						取消订单
 					</view>
+					<!-- <view class="toast_but_pay" v-if="order_type == '1'" @click="confirmPay">
+						确认支付
+					</view> -->
 					<view class="toast_but_pay" @click="goto_pages">
-						去支付<u-count-down :show-hours="false" bg-color="" color="#fff" :timestamp="timestamp"></u-count-down>
+						去支付
 					</view>
 				</view>
 				<view  class="toast_but_r"  v-if="shop_det.status == 30">
@@ -32,13 +32,10 @@
 					<view class="toast_but_no" @click="shouh">售后服务</view> <!-- // -->
 					<view class="toast_but_pay" @click="del_order(shop_det.id,shop_det.status)">删除订单</view> <!-- // -->
 				</view>
-				<!-- <view class="toast_but_r"  v-if="shop_det.status == 60">
-					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 1" @click="shen_details(shop_det.id)">撤销</view>
-					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 2" @click="order_logist(shop_det)">再次申请</view>
-					<view class="toast_but_pay" v-if="shop_det.status == 60 && shop_det.return_type == 3" @click="del_order(shop_det.id,shop_det.status)">删除订单</view>
-				</view> -->
+
 			</view>
 		</view>
+		
 		<!-- 地址 -->
 		<view class="address">
 			<view class="address_l">
@@ -51,30 +48,11 @@
 						{{shop_det.address_id.contact}} {{shop_det.address_id.mobile}}
 					</view>
 				</view>
-				<!-- <view class="address_r_r">
-					＞
-				</view> -->
 			</view>
 		</view>
+		
 		<!-- 商品汇总 -->
 		<view class="st_data">
-			<!-- <view class="statis">
-				<view class="statis_l">
-					商品汇总
-				</view>
-				<view class="statis_r">
-					共 {{shop_det.count}} 件 ￥{{all_goods_price.toFixed(2)}}
-				</view>
-			</view> -->
-			<!-- 工费 -->
-			<!-- <view class="statis">
-				<view class="statis_l">
-					工费
-				</view>
-				<view class="statis_r">
-					￥{{(all_labor_price.toFixed(2))}}
-				</view>
-			</view> -->
 			<view class="statis">
 				<view class="statis_l">
 					合计
@@ -84,53 +62,39 @@
 				</view>
 			</view>
 		</view>
+		
 		<!-- 商品 -->
 		<view class="shop">
 			<view class="shop_title">
 				<view class="title_l">
 					订单编号：{{shop_det.bn}}
 				</view>
-				<!-- <view class="title_r">
-					待付款
-				</view> -->
 			</view>
-			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods" v-if="shop_det.notCustom && shop_det.order_goods">
+			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods" v-if="order_type === '0' && shop_det.order_goods">
 				<image :src="its.image" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
 						<view class="title">{{its.title}}</view>
 						<view class="Specifications">金重：{{its.sku.weight}}g<text class="num"> 条码：{{its.sku.bar_code}}</text></view>
 						<view class="list_right_its">
-							<!-- <text v-if="its.is_height == 1">
-								金价：￥{{(((its.total/1)-((its.labor_price/1)))/(its.sku.weight/1)).toFixed(2)}}/g</text>
-							<text v-if="its.is_height == 2">金价：￥0.00/g</text>
-							<text v-if="its.is_height == 1">工费:￥{{((its.labor_price/1)/(its.sku.weight/1)).toFixed(2)}}/g </text>
-							<text v-if="its.is_height == 2">工费：￥0.00/g</text> -->
 						</view>
-						<!-- <view class="price">￥{{((its.total/1)-((its.labor_price/1))).toFixed(2)}} <text>*{{its.count}}</text></view> -->
 					</view>
 				</view>
 			</view>
-			<view v-if="!shop_det.notCustom && shop_det.good" class="shop_list">
-				<image v-if="shop_det.good.image" :src="shop_det.good.image.split(',')[0]" mode="aspectFill"></image>
+			<view v-if="order_type === '1' && shop_det.order_goods" class="shop_list">
+				<image v-if="shop_det.order_goods.image" :src="shop_det.order_goods.image.split(',')[0]" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
-						<view class="title">{{shop_det.good.title}}</view>
+						<view class="title">{{shop_det.order_goods.title}}</view>
 						<view class="Specifications"></view>
 						<view class="list_right_its">
 						</view>
-						<!-- <view class="price">
-							<text>￥{{(shop_det.price)}}</text>
-							<text style="color: #999;"> *{{its.count}}</text>
-						</view> -->
+						
 					</view>
 						
 				</view>
 			</view>
-			<!-- <view class="heji">
-				<text  class="heji_l">共 {{shop_det.count}} 件</text>
-				<text class="heji_r"> 合计：<text>￥{{shop_det.total}}</text></text>
-			</view> -->
+			
 		</view>
 		
 		<view class="st_data" style="margin-bottom: 60rpx;">
@@ -164,56 +128,73 @@
 	export default{
 		data(){
 			return{
-				// end_time:'1610699111',//秒杀到期
-				timestamp:0,
-				order_id:0,
-				shop_det:'',
-				status:'',
+				timestamp: 0,
+				order_id: 0,
+				order_type: '0',
+				shop_det: '',
+				status: '',
 				all_goods_price: 0,
 				all_labor_price: 0,
 				all_total: 0,
 			}
 		},
-		watch:{
-			// timestamp(a){
-			// 	console.log(a);
-			// 	if(this.shop_det.status == 10){
-			// 		if(a <=0){
-			// 			uni.navigateBack()
-			// 		}
-			// 	}
-			// }
-		},
-		onLoad(op) {
-			console.log(op,111)
-			this.order_id = op.page_type
-			this.page_reader()
+		onLoad(params) {
+			this.order_id = params.order_id;
+			this.order_type = params.order_type;
+			this.queryOrderInfo()
 		},
 		methods:{
-			page_reader(){
-				this.$api.get('order_goods',{id:this.order_id,is_h5:1}).then(res=>{
-					console.log(res)
-					if(res.status == 1){
-						this.shop_det = res.data
-
-						let data = new Date()
-						let state = data.getTime()
-						let end_time = res.data.cancel_time * 1000
-						console.log(end_time) 
-						let reslut = end_time - state
-						this.timestamp = Math.floor(reslut / 1000)
-						console.log(this.timestamp);
-						for (let i in res.data.order_goods) {
-							this.all_goods_price += (((res.data.order_goods[i].total/1)-(res.data.order_goods[i].labor_price/1))/1)
-							this.all_labor_price += (res.data.order_goods[i].labor_price/1)
-							this.all_total += (res.data.order_goods[i].total/1)
+			queryOrderInfo(){
+				if (this.order_type === '1') {
+					this.$api.get('shop/order/getOrderDetail',{ bn: this.order_id, type: 1 }).then(res => {
+						if(res.status == 1 && res.data[0]){
+							const data = res.data[0];
+							this.shop_det = data;
+							this.shop_det.address_id = this.shop_det.address;
+							this.shop_det.bn = this.order_id;
+							for (let i in data.order_goods) {
+								this.all_goods_price += (((data.order_goods[i].total/1)-(data.order_goods[i].labor_price/1))/1)
+								this.all_labor_price += (data.order_goods[i].labor_price/1)
+								this.all_total += (data.order_goods[i].total/1)
+							}
+						}
+					})
+				} else {
+					this.$api.get('order_goods',{ id: this.order_id, is_h5: 1 }).then(res => {
+						if(res.status == 1){
+							this.shop_det = res.data
+							let data = new Date()
+							let state = data.getTime()
+							let end_time = res.data.cancel_time * 1000
+							let reslut = end_time - state
+							this.timestamp = Math.floor(reslut / 1000)
+							for (let i in res.data.order_goods) {
+								this.all_goods_price += (((res.data.order_goods[i].total/1)-(res.data.order_goods[i].labor_price/1))/1)
+								this.all_labor_price += (res.data.order_goods[i].labor_price/1)
+								this.all_total += (res.data.order_goods[i].total/1)
+							}
+						}
+					})
+				}
+			},
+			confirmPay() {
+				
+				uni.showModal({
+					content:'请您确定金额已经支付到对方账户',
+					success: (status) => {
+						if(status.confirm){
+							this.$api.post('shop/order/payeeConfirm',{bn: this.shop_det.bn}).then(res=>{
+								if (res.status == 1){
+									this.queryOrderInfo()
+								}
+							})
 						}
 					}
 				})
 			},
 			//物流
 			order_logist_wl(e){
-					this.com.navto('../my/logistr?cont='+e)
+				this.com.navto('../my/logistr?cont='+e)
 			},
 			shouh(){
 				this.com.navto('../service/service')
@@ -226,7 +207,6 @@
 					success(a) {
 						if(a.confirm){
 							that.$api.put('orders',{id:e,type:1}).then(res=>{
-								console.log(res)
 								if(res.status == 1){
 									that.com.redto('./order?state='+ 30 +'&index='+ 3)
 								}else{
@@ -289,8 +269,11 @@
 					menber_price:this.shop_det.member_money,
 					shop_price:JSON.parse(this.shop_det.total)
 				}
-				uni.navigateTo({
-					url:'../my/payments?data='+this.shop_det.bn+'&shop='+JSON.stringify(payment_data)
+				// uni.navigateTo({
+				// 	url:'../my/payments?data='+this.shop_det.bn+'&shop='+JSON.stringify(payment_data)
+				// })
+				uni.redirectTo({
+					url:'../index/payment_order?data='+this.shop_det.bn+'&shop='+JSON.stringify(payment_data)
 				})
 			}
 		}
@@ -380,7 +363,7 @@
 			display: flex;
 			// align-items: center;
 			border-bottom: 1rpx solid #f6f6f6;
-			padding-top: 20rpx;
+			padding: 20rpx 0;
 			image{
 				width: 200rpx;
 				height: 200rpx;
