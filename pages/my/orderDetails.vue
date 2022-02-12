@@ -17,6 +17,9 @@
 					<view class="toast_but_no" v-if="order_type == '0'" @click="no_order(shop_det.id)">
 						取消订单
 					</view>
+					<!-- <view class="toast_but_pay" v-if="order_type == '1'" @click="confirmPay">
+						确认支付
+					</view> -->
 					<view class="toast_but_pay" @click="goto_pages">
 						去支付
 					</view>
@@ -78,11 +81,11 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="order_type === '1' && shop_det.good" class="shop_list">
-				<image v-if="shop_det.good.image" :src="shop_det.good.image.split(',')[0]" mode="aspectFill"></image>
+			<view v-if="order_type === '1' && shop_det.order_goods" class="shop_list">
+				<image v-if="shop_det.order_goods.image" :src="shop_det.order_goods.image.split(',')[0]" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
-						<view class="title">{{shop_det.good.title}}</view>
+						<view class="title">{{shop_det.order_goods.title}}</view>
 						<view class="Specifications"></view>
 						<view class="list_right_its">
 						</view>
@@ -136,7 +139,6 @@
 			}
 		},
 		onLoad(params) {
-			console.log(params)
 			this.order_id = params.order_id;
 			this.order_type = params.order_type;
 			this.queryOrderInfo()
@@ -148,6 +150,7 @@
 						if(res.status == 1 && res.data[0]){
 							const data = res.data[0];
 							this.shop_det = data;
+							this.shop_det.address_id = this.shop_det.address;
 							this.shop_det.bn = this.order_id;
 							for (let i in data.order_goods) {
 								this.all_goods_price += (((data.order_goods[i].total/1)-(data.order_goods[i].labor_price/1))/1)
@@ -173,6 +176,21 @@
 						}
 					})
 				}
+			},
+			confirmPay() {
+				
+				uni.showModal({
+					content:'请您确定金额已经支付到对方账户',
+					success: (status) => {
+						if(status.confirm){
+							this.$api.post('shop/order/payeeConfirm',{bn: this.shop_det.bn}).then(res=>{
+								if (res.status == 1){
+									this.queryOrderInfo()
+								}
+							})
+						}
+					}
+				})
 			},
 			//物流
 			order_logist_wl(e){
@@ -345,7 +363,7 @@
 			display: flex;
 			// align-items: center;
 			border-bottom: 1rpx solid #f6f6f6;
-			padding-top: 20rpx;
+			padding: 20rpx 0;
 			image{
 				width: 200rpx;
 				height: 200rpx;

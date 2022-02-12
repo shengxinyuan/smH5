@@ -22,12 +22,12 @@
 						</view>
 					</view>
 				</view>
-				<view v-if="item.order_type === '1' && item.goods && item.goods[0]">
+				<view v-if="item.order_type === '1' && item.goods">
 					<view class="shop_list">
-						<image v-if="item.goods[0].image" :src="item.goods[0].image.split(',')[0]" mode="aspectFill" @click="order_detail(item)"></image>
+						<image v-if="item.goods.image" :src="item.goods.image.split(',')[0]" mode="aspectFill" @click="order_detail(item)"></image>
 						<view class="list_right">
 							<view @click="order_detail(item)">
-								<view class="title">{{item.goods[0].title}}</view>
+								<view class="title">{{item.goods.title}}</view>
 								<view class="Specifications"></view>
 								<view class="shop_list_label">
 								</view>
