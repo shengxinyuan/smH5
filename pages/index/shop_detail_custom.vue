@@ -75,7 +75,7 @@
 						<view>购物车</view>
 					</view>
 					<view class="anniu">
-						<view class="add_car" @click="openPopup('cart')">加入购物车</view>
+						<!-- <view class="add_car" @click="openPopup('cart')">加入购物车</view> -->
 						<view class="buy" @click="openPopup('buy')">立即购买</view>
 					</view>
 				</view>
@@ -93,7 +93,7 @@
 								</u-number-box>
 							</view>
 							<button class="btn" @click="buy" v-if="shop_type == 'buy'">立即购买</button>
-							<button class="btn" @click="addCart" v-else>加入购物车</button>
+							<!-- <button class="btn" @click="addCart" v-else>加入购物车</button> -->
 						</view>
 					</view>
 				</scroll-view>
