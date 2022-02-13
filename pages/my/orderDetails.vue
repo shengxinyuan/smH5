@@ -1,34 +1,37 @@
 <template>
 	<view>
-		<view class="sure" v-if="shop_det.status == 10">
-			待支付
-		</view>
-		<text class="sure" v-if="shop_det.status == 20">待发货</text>
-		<text class="sure" v-if="shop_det.status == 30">待收货</text>
-		<text class="sure" v-if="shop_det.status == 40">待评价</text>
-		<text class="sure" v-if="shop_det.status == 50">已完成</text>
-		<text class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 1">审核中</text>
-		<text class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 2">已拒绝</text>
-		<text class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 3">售后成功</text>
+		<view class="sure" v-if="shop_det.status == 10">待支付</view>
+		<view class="sure" v-if="shop_det.status == 20">待发货</view>
+		<view class="sure" v-if="shop_det.status == 25">商家已确认收款，待发货</view>
+		<view class="sure" v-if="shop_det.status == 30">待收货</view>
+		<view class="sure" v-if="shop_det.status == 40">待评价</view>
+		<view class="sure" v-if="shop_det.status == 50">已完成</view>
+		<view class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 1">审核中</view>
+		<view class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 2">已拒绝</view>
+		<view class="sure" v-if="shop_det.status == 60 && shop_det.return_type == 3">售后成功</view>
 		<view class="toast_order" v-if="shop_det.status != 20">
 			<view class="toast_but">
 				<view></view>
 				<view class="toast_but_r"  v-if="shop_det.status == 10">
-					<view class="toast_but_no" v-if="order_type == '0'" @click="no_order(shop_det.id)">
+					<view class="toast_but_no" v-if="!isCustom" @click="no_order(shop_det.id)">
 						取消订单
 					</view>
-					<!-- <view class="toast_but_pay" v-if="order_type == '1'" @click="confirmPay">
+					<view class="toast_but_pay" v-if="isCustom" @click="confirmPay">
 						确认支付
-					</view> -->
+					</view>
 					<view class="toast_but_pay" @click="goto_pages">
 						去支付
 					</view>
 				</view>
-				<view  class="toast_but_r"  v-if="shop_det.status == 30">
+				<view  class="toast_but_r"  v-if="shop_det.status == 30 && !isCustom">
 					<view class="toast_but_no" @click="order_logist_wl(shop_det.bn)">查看物流</view> <!-- // -->
 					<view class="toast_but_pay" @click="sure_details(shop_det.id)">确认收货</view> <!-- // -->
 				</view>
-				<view class="toast_but_r"  v-if="shop_det.status == 50">
+				<view  class="toast_but_r"  v-if="shop_det.status == 30 && isCustom">
+					<view class="toast_but_no" @click="order_logist_wl(shop_det.bn)">查看物流</view> <!-- // -->
+					<view class="toast_but_pay" @click="custom_sure_details(shop_det.id)">确认收货</view> <!-- // -->
+				</view>
+				<view class="toast_but_r"  v-if="shop_det.status == 50 && !isCustom">
 					<view class="toast_but_no" @click="shouh">售后服务</view> <!-- // -->
 					<view class="toast_but_pay" @click="del_order(shop_det.id,shop_det.status)">删除订单</view> <!-- // -->
 				</view>
@@ -70,7 +73,7 @@
 					订单编号：{{shop_det.bn}}
 				</view>
 			</view>
-			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods" v-if="order_type === '0' && shop_det.order_goods">
+			<view class="shop_list"  v-for="(its,ind) in shop_det.order_goods" v-if="!isCustom && shop_det.order_goods">
 				<image :src="its.image" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
@@ -81,7 +84,7 @@
 					</view>
 				</view>
 			</view>
-			<view v-if="order_type === '1' && shop_det.order_goods" class="shop_list">
+			<view v-if="isCustom && shop_det.order_goods" class="shop_list">
 				<image v-if="shop_det.order_goods.image" :src="shop_det.order_goods.image.split(',')[0]" mode="aspectFill"></image>
 				<view class="list_right">
 					<view>
@@ -143,9 +146,14 @@
 			this.order_type = params.order_type;
 			this.queryOrderInfo()
 		},
+		computed: {
+			isCustom() {
+				return this.order_type == 1;
+			}
+		},
 		methods:{
 			queryOrderInfo(){
-				if (this.order_type === '1') {
+				if (this.isCustom) {
 					this.$api.get('shop/order/getOrderDetail',{ bn: this.order_id, type: 1 }).then(res => {
 						if(res.status == 1 && res.data[0]){
 							const data = res.data[0];
@@ -178,12 +186,11 @@
 				}
 			},
 			confirmPay() {
-				
 				uni.showModal({
 					content:'请您确定金额已经支付到对方账户',
 					success: (status) => {
 						if(status.confirm){
-							this.$api.post('shop/order/payeeConfirm',{bn: this.shop_det.bn}).then(res=>{
+							this.$api.post('shop/order/payeeConfirm', {bn: this.shop_det.bn}).then(res=>{
 								if (res.status == 1){
 									this.queryOrderInfo()
 								}
@@ -198,6 +205,21 @@
 			},
 			shouh(){
 				this.com.navto('../service/service')
+			},
+			// 自定义商品确认收货
+			custom_sure_details(){
+				uni.showModal({
+					content:'您确定收到货物了吗？',
+					success: (a) => {
+						if(a.confirm){
+							this.$api.post('shop/order/receiveConfirm', {bn: this.shop_det.bn}).then(res=>{
+								if(res.status == 1){
+									this.queryOrderInfo()
+								}
+							})
+						}
+					}
+				})
 			},
 			//确认收货
 			sure_details(e){
