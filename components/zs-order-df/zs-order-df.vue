@@ -3,47 +3,30 @@
 		<view class="order_time" v-for="(item,index) of list" :key="index">
 			<view class="order_box">
 				<view class="order_head" @click="order_detail(item.bn)">
-					订单编号：<text class="time">{{item.bn,10}}</text> 
+					订单编号：<text class="time">{{item.bn_id}}</text> 
 					<text class="sure" v-if="item.status == 10">待付款</text>
+					<text class="sure" v-if="item.status == 20">待发货</text>
+					<text class="sure" v-if="item.status == 25">商家已确认收款，待发货</text>
 				</view>
-				<view v-if="item.notCustom && item.data[0]">
-					<view class="shop_list"  v-for="(its,ind) in item.data[0]">
-						<image v-if="its.goods" :src="its.goods.image" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
-						<view class="list_right" v-if="its.goods">
+				<view v-if="item.order_type === '0' && item.goods">
+					<view class="shop_list">
+						<image v-if="item.goods" :src="item.goods.image" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
+						<view class="list_right" v-if="item.goods">
 							<view @click="order_detail(item.bn,10)">
-								<view class="title">{{its.goods.title}}</view>
-								<view class="Specifications">金重：{{its.goods.weight}}g<text class="num"> 条码：{{its.goods.bar_code}}</text></view>
-								<view class="shop_list_label">
-									<!-- <text v-if="its.goods.is_height == 1">
-										金价：￥{{((its.gold_price/1)/(its.goods.weight/1)).toFixed(2)}}/g</text>
-									<text v-if="its.goods.is_height == 2">金价：￥0.00/g</text>
-									<text v-if="its.goods.is_height == 1">工费：￥{{(((its.labor_price/1)+(its.labor_price_add/1))/(its.goods.weight/1)).toFixed(2)}}/g </text>
-									<text v-if="its.goods.is_height == 2">工费：￥0.00/g</text> -->
-								</view>
-								<view class="price">
-									<!-- <text>￥{{(its.total/1).toFixed(2)}}</text>
-									<text style="color: #999;"> *{{its.count}}</text> -->
-								</view>
+								<view class="title">{{item.goods.title}}</view>
+								<view class="Specifications">金重：{{item.goods.weight}}g<text class="num"> 条码：{{item.goods.bar_code}}</text></view>
 							</view>
-								
 						</view>
 					</view>
 				</view>
-				<view v-if="!item.notCustom && item.good">
+				<view v-if="item.order_type === '1' && item.goods">
 					<view class="shop_list">
-						<image v-if="item.good.image" :src="item.good.image.split(',')[0]" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
+						<image v-if="item.goods.image" :src="item.goods.image.split(',')[0]" mode="aspectFill" @click="order_detail(item.bn,10)"></image>
 						<view class="list_right">
 							<view @click="order_detail(item.bn,10)">
-								<view class="title">{{item.good.title}}</view>
+								<view class="title">{{item.goods.title}}</view>
 								<view class="Specifications"></view>
-								<view class="shop_list_label">
-								</view>
-								<view class="price">
-									<!-- <text>￥{{(item.price)}}</text>
-									<text style="color: #999;"> *{{its.count}}</text> -->
-								</view>
 							</view>
-								
 						</view>
 					</view>
 				</view>
@@ -53,18 +36,16 @@
 						<view>合计:<text class="money">￥{{item.total}}</text></view>
 					</view> <!-- 位置 -->
 					<view class="foot_child">
-						<view class="go_buy_s" v-if="item.status == 10" @click="no_order(item.id,index)">取消订单</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 10" @click="order_detail(item.bn,10)">去支付
-							<!-- <u-count-down :timestamp="item.t_times" :show-hours="false"></u-count-down> -->
-						</view> <!-- // -->
-						<view class="go_buy_s" v-if="item.status == 20" @click="order_logist(item)">退款</view>  <!-- // -->
-						<view class="go_buy_s" v-if="item.status == 20" @click="order_logist_wl(item)">查看物流</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 20" @click="sure_details(item.id)">确认收货</view> <!-- // -->
+						<view class="go_buy_s" v-if="item.status == 10" @click="no_order(item.id,index)">取消订单</view> 
+						<view class="go_buy" v-if="item.status == 10" @click="order_detail(item.bn,10)">去支付</view> 
+						<view class="go_buy_s" v-if="item.status == 20" @click="order_logist(item)">退款</view>  
+						<view class="go_buy_s" v-if="item.status == 20" @click="order_logist_wl(item)">查看物流</view> 
+						<view class="go_buy" v-if="item.status == 20" @click="sure_details(item.id)">确认收货</view> 
 						<view class="go_buy" v-if="item.status == 30" @click="go_immed(item)">立即评价</view>
-						<view class="go_buy_s" v-if="item.status == 40" @click="del_order(item.id,item.status)">删除订单</view> <!-- // -->
+						<view class="go_buy_s" v-if="item.status == 40" @click="del_order(item.id,item.status)">删除订单</view> 
 						<view class="go_buy" v-if="item.status == 50 && item.return_type == 1" @click="shen_details(item.id)">撤销</view> 
-						<view class="go_buy" v-if="item.status == 50 && item.return_type == 2" @click="order_logist(item)">再次申请</view> <!-- // -->
-						<view class="go_buy" v-if="item.status == 50 && item.return_type == 3" @click="del_order(item.id,item.status)">删除订单</view> <!-- // -->
+						<view class="go_buy" v-if="item.status == 50 && item.return_type == 2" @click="order_logist(item)">再次申请</view> 
+						<view class="go_buy" v-if="item.status == 50 && item.return_type == 3" @click="del_order(item.id,item.status)">删除订单</view> 
 					</view>
 				</view>
 			</view>
