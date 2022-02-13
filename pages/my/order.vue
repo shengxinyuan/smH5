@@ -10,8 +10,7 @@
  		</view>
  		<view class="box" v-if="page_show">
 			<view v-if="list.length != 0">
-				<zs-order-list :list="list" @order_detail="order_detail" v-if="current_ind != 1" @del_order="del_order"></zs-order-list>
-				<zs-order-df :list="list" @order_detail="order_detail" @cancel_detail="cancel_detail" v-else></zs-order-df>
+				<zs-order-list :list="list" @order_detail="order_detail" @del_order="del_order"></zs-order-list>
 				<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20"/>
 			</view> 
 			<view v-else style="padding-top: 25%;"><u-empty text="暂无该类订单" mode="order"></u-empty> </view> 
@@ -27,7 +26,7 @@
  	export default { 	
  		data() {
  			return {
- 				tabs: [{name:'全部',id:0}, {name:'待付款',id:10}, {name:'待收货',id:30}, {name:'已完成',id:50}],
+ 				tabs: [{name:'全部',id:0}, {name:'待确认',id:20}, {name:'待收货',id:30}, {name:'已完成',id:50}],
  				list:[],
  				current: 0,
  				isShow: true,
