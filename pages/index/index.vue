@@ -21,6 +21,21 @@
 				</view>
 			</view>
 		</view>
+		
+		<!-- 九宫格 -->
+		<view class="nine_g" :style="{backgroundColor: backgroundColor2}">
+			<view class="nine_g_child" v-for="(it,ind) in index_data.label" :key="ind" v-if="ind <= 7"
+				@click="go_textrue(it.id)">
+				<view class="nine_g_child_tit">
+					{{it.title}}
+				</view>
+				<view class="nine_g_child_cla">
+					{{it.remark}}
+				</view>
+				<image :src="it.image" mode="aspectFill"></image>
+			</view>
+		</view>
+		
 		<!-- 内容部分 -->
 		<view>
 			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="firstList" active-color="#2d407a"
@@ -138,13 +153,16 @@
 				let nameUrlQuery = window.location.search.substr(1).match(reg1);
 				console.log('nameUrlQuery', nameUrlQuery)
 				this.member_id = unescape(nameUrlQuery[2])
+				uni.setStorageSync('member_id', this.member_id);
+				
 				this.getAllCategory();
-				uni.setStorageSync('member_id', this.member_id)
-				this.query_member_info()
+				this.query_member_info();
+				this.query_index_data();
 			} else {
 				this.wxAuthorize(op.data)
 			}
 		},
+		
 		onPageScroll(e) {
 			if (e.scrollTop > this.myScroll) {
 				this.isTop = 1
@@ -163,6 +181,13 @@
 			search() {
 				this.com.navto('./search');
 			},
+			//点击材质
+			go_textrue(e) {
+				let a = JSON.stringify(this.index_data.label)
+				if (a) {
+					this.com.navto('/pages/index/nine_nav?id=' + e + '&data=' + a)
+				}
+			},
 			getAllCategory() {
 				uni.showLoading({
 					mask: true
@@ -180,6 +205,13 @@
 					}
 				}).catch(() => {
 					uni.hideLoading()
+				})
+			},
+			query_index_data () {
+				this.$api.get('index').then(res => {
+					if (res.status == 1) {
+						this.index_data = res.data
+					}
 				})
 			},
 			queryList() {
@@ -465,6 +497,33 @@
 					text-align: right;
 					color: #ea5b72;
 				}
+			}
+		}
+	}
+	.nine_g {
+		width: 100%;margin: 20rpx 0;;border-radius: 10rpx;
+		padding: 8rpx 16rpx;
+		display: flex;flex-wrap: wrap;justify-content: space-between;
+		.nine_g_child{
+			width: 23%;
+			height: 200rpx;
+			margin-right: 1%;
+			margin: 10rpx 1% 10rpx 0;
+			position: relative;
+			image{
+				width: 100%;height: 200rpx;position: absolute;left: 0;top: 0;
+			}
+			.nine_g_child_tit{
+				width: 70%;text-align: center;
+				position: absolute;left: 15%;top: 10%;
+				z-index: 20;
+				white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
+			}
+			.nine_g_child_cla{
+				width: 100%;text-align: center;color: #ccae70;
+				position: absolute;left: 0;top: 34%;font-size: 20rpx;
+				z-index: 20;
+				white-space: nowrap;overflow: hidden;text-overflow: ellipsis;
 			}
 		}
 	}
