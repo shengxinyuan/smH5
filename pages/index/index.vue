@@ -12,7 +12,7 @@
 		</view>
 
 		<view class="king_backimg">
-			<image class="imga" :src="king_user.image || 'https://img.alicdn.com/imgextra/i3/O1CN01ywGbA51tlwYSmJGWI_!!6000000005943-0-tps-1170-859.jpg' " mode="widthFix"></image>
+			<u-swiper :list="king_user.banner_list" height="400"></u-swiper>
 			<view class="king_position">
 				<image class="imgb" :src="king_user.avatar" mode="aspectFill"></image>
 				<view class="position_name">
@@ -213,6 +213,11 @@
 						this.index_data = res.data
 					}
 				})
+				this.$api.get('shop/banner/query_picture', {member_id: this.member_id}).then(res => {
+					if (res.status == 1) {
+						this.index_data = res.data
+					}
+				})
 			},
 			queryList() {
 				if (this.isCustom === 1) {
@@ -337,6 +342,11 @@
 					console.log(res.data.avatar)
 					if (res.status == 1) {
 						this.king_user = res.data
+						if (this.king_user.banner_list && this.king_user.banner_list.length > 0) {
+							this.king_user.banner_list = this.king_user.banner_list.map((item) => ({image: item.image_url}))
+						} else {
+							this.king_user.banner_list = [{image: 'https://img.alicdn.com/imgextra/i3/O1CN01ywGbA51tlwYSmJGWI_!!6000000005943-0-tps-1170-859.jpg'}]
+						}
 					}
 				})
 			},
@@ -370,29 +380,28 @@
 	.king_backimg {
 		width: 750upx;
 		position: relative;
-
 		.imga {
 			width: 100%;
 			height: 100%;
 		}
 
 		.king_position {
-			position: absolute;
-			left: 30upx;
-			bottom: 60upx;
+			// position: absolute;
+			// left: 30upx;
+			// bottom: 60upx;
 			display: flex;
+			margin: 20rpx 20rpx 0 20rpx;
 
 			image {
-				width: 100rpx;
-				height: 100rpx;
+				width: 80rpx;
+				height: 80rpx;
 				border-radius: 50%;
 				border: 2rpx solid white;
 			}
 
 			.position_name {
-				color: white;
-				padding-left: 10rpx;
-
+				padding-left: 20rpx;
+				font-size: 15rpx;
 				view:nth-child(1) {
 					margin-top: 10rpx;
 					font-size: 30rpx;
