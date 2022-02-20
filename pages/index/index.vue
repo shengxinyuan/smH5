@@ -213,11 +213,6 @@
 						this.index_data = res.data
 					}
 				})
-				this.$api.get('shop/banner/query_picture', {member_id: this.member_id}).then(res => {
-					if (res.status == 1) {
-						this.index_data = res.data
-					}
-				})
 			},
 			queryList() {
 				if (this.isCustom === 1) {
