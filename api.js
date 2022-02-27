@@ -1,5 +1,5 @@
-const commoneUrl  = "http://zuanshi.nxm.wanheweb.com/api/"; //公共路径 
-// const commoneUrl  = "https://yapi.kyy1996.com/mock/38/api/"; //公共路径 
+// const commoneUrl  = "http://zuanshi.nxm.wanheweb.com/api/"; //公共路径 
+const commoneUrl  = "http://zuanshi.dis.wanheweb.com/api/"; //公共路径 
 
 var that = this
 //post请求封装
