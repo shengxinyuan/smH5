@@ -18,7 +18,6 @@ function postRequest(url,data,type){
 			header:{
 				'content-type':type|| 'application/x-www-form-urlencoded',
 				'token':uni.getStorageSync('token'),
-				// 'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjQyOTE4NjIyLCJuYmYiOjE2NDI5MTg2MjUsImV4cCI6MTY0NTUxMDYyMiwiZGF0YSI6eyJ1aWQiOjIxMX19.S2O3F_5zFFhiqksGRRGCkJvsDQq0yYtP8Kl3fdxsd9o'
 			},
 			success:function(res){
 				resolve(res.data);
@@ -43,7 +42,6 @@ function getRequest(url,data){
 				header:{
 					'content-type': 'application/json',
 					'token':uni.getStorageSync('token')
-					// 'token':'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiIhQCMkJSomIiwiYXVkIjoiIiwiaWF0IjoxNjQyOTE4NjIyLCJuYmYiOjE2NDI5MTg2MjUsImV4cCI6MTY0NTUxMDYyMiwiZGF0YSI6eyJ1aWQiOjIxMX19.S2O3F_5zFFhiqksGRRGCkJvsDQq0yYtP8Kl3fdxsd9o'
 				},
 				success:function(res){
 					resolve(res.data);
