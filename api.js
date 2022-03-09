@@ -1,5 +1,10 @@
-// const commoneUrl  = "http://zuanshi.nxm.wanheweb.com/api/"; //公共路径 
-const commoneUrl  = "http://zuanshi.dis.wanheweb.com/api/"; //公共路径 
+const env = uni.getStorageSync('env') || 'prod'
+const urlMap = {
+	test: 'http://test-zuanshi.semoh.cn/',
+	pre: 'http://app-api.shengxinyuan.online/',
+	prod: 'https://zuanshi.semoh.cn/'
+}
+const commoneUrl = urlMap[env];
 
 var that = this
 //post请求封装
