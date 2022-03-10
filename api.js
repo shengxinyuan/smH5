@@ -1,9 +1,11 @@
 const env = uni.getStorageSync('env') || 'prod'
+
 const urlMap = {
-	test: 'http://test-zuanshi.semoh.cn/',
-	pre: 'http://app-api.shengxinyuan.online/',
-	prod: 'https://zuanshi.semoh.cn/'
+	test: 'http://test-zuanshi.semoh.cn/api/',
+	pre: 'http://app-api.shengxinyuan.online/api/',
+	prod: 'https://zuanshi.semoh.cn/api/'
 }
+console.log(':::::::::env-----------', env)
 const commoneUrl = urlMap[env];
 
 var that = this
@@ -41,7 +43,7 @@ function getRequest(url,data){
 				dataType:'json',
 				header:{
 					'content-type': 'application/json',
-					'token':uni.getStorageSync('token')
+					'token':uni.getStorageSync('token'),
 				},
 				success:function(res){
 					resolve(res.data);

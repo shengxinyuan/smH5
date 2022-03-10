@@ -143,17 +143,12 @@
 			}
 		},
 		onLoad(op) {
-			var reg = new RegExp("(^|&)" + 'token' + "=([^&]*)(&|$)");
-			let tokenUrlQuery = window.location.search.substr(1).match(reg);
-			let token = ''
-			if (tokenUrlQuery !== null) {
-				token = unescape(tokenUrlQuery[2])
-				uni.setStorageSync('token', token);
-				var reg1 = new RegExp("(^|&)" + 'name' + "=([^&]*)(&|$)");
-				let nameUrlQuery = window.location.search.substr(1).match(reg1);
-				console.log('nameUrlQuery', nameUrlQuery)
-				this.member_id = unescape(nameUrlQuery[2])
+			const urlQuery = this.urlParse()
+			if (urlQuery.token) {
+				this.member_id = urlQuery.name
+				uni.setStorageSync('token', urlQuery.token);
 				uni.setStorageSync('member_id', this.member_id);
+				uni.setStorageSync('env', urlQuery.env || 'pre');
 				
 				this.getAllCategory();
 				this.query_member_info();
@@ -178,6 +173,21 @@
 			}
 		},
 		methods: {
+			urlParse() {
+				let url = window.location.search;
+				let obj = {};
+				let reg = /[?&][^?&]+=[^?&]+/g;
+				let arr = url.match(reg);
+				if (arr) {
+					arr.forEach((item) => {
+						let tempArr = item.substring(1).split('=');
+						let key = decodeURIComponent(tempArr[0]);
+						let val = decodeURIComponent(tempArr[1]);
+						obj[key] = val;
+					});
+				}
+				return obj;
+			},
 			search() {
 				this.com.navto('./search');
 			},
@@ -331,8 +341,8 @@
 				}
 			},
 			query_member_info() {
-				this.$api.get('manageh5', {
-					member_id: uni.getStorageSync('member_id')
+				this.$api.get('member', {
+					// member_id: uni.getStorageSync('member_id')
 				}).then(res => {
 					console.log(res.data.avatar)
 					if (res.status == 1) {

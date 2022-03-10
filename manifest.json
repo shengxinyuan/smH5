@@ -1,6 +1,6 @@
 {
     "name" : "奢美饰界",
-    "appid" : "__UNI__A0A4AB1",
+    "appid" : "__UNI__07CF611",
     "description" : "奢侈品交易平台",
     "versionName" : "1.0.2",
     "versionCode" : 102,
@@ -148,7 +148,7 @@
     },
     "h5" : {
         "title" : "奢美饰界",
-        // "domain" : "http://zuanshi.dis.wanheweb.com",
+        "domain" : "http://test-h5.semoh.cn/",
         "optimization" : {
             "treeShaking" : {
                 "enable" : false
@@ -162,7 +162,7 @@
             "https" : false,
             "proxy" : {
                 "/dpc" : {
-                    "target" : "http://zuanshi.dis.wanheweb.com",
+                    "target" : "http://app-api.shengxinyuan.online",
                     "changeOrigin" : true,
                     "secure" : false,
                     "pathRewrite" : {
@@ -172,7 +172,7 @@
             }
         },
         "router" : {
-            "mode" : "history",
+            "mode" : "hash",
             "base" : "/smsj/"
         }
     }
