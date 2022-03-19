@@ -2,10 +2,9 @@ const env = uni.getStorageSync('env') || 'prod'
 
 const urlMap = {
 	test: 'http://test-zuanshi.semoh.cn/api/',
-	pre: 'http://app-api.shengxinyuan.online/api/',
+	pre: 'https://zuanshi.semoh.cn/api/',
 	prod: 'https://zuanshi.semoh.cn/api/'
 }
-console.log(':::::::::env-----------', env)
 const commoneUrl = urlMap[env];
 
 var that = this
