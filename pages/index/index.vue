@@ -61,6 +61,57 @@
 				inactive-color="#010000" :show-bar="false" font-size="30" height="50" :current="first" @change="changeFirst"></u-tabs>
 			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="secondList" active-color="#010000" bg-color="transparent"
 				inactive-color="#6a6456" :show-bar="false" font-size="22" height="50" :current="second" @change="changeSecond"></u-tabs>
+			<view class="filter-box" v-if="!isCustom">
+				<view class="item" @click="price_change">
+					价格
+					<u-icon name="arrow-down" v-if="price_type == 1"></u-icon>
+					<u-icon name="arrow-up" v-if="price_type == 2"></u-icon>
+				</view>
+				<u-icon name="grid" size="40"></u-icon>
+				<view class="item" @click="showFilter = true">筛选</view>
+				<u-popup v-model="showFilter" mode="right">
+					<view class="popups">
+						<view class="" style="height: 100rpx;"></view>
+						<!-- 多选标签 -->
+						<view class="item">
+							<view class="item_tit">
+								{{goods_label.name}}
+							</view>
+							<view class="item_child">
+								<view class="child_v" 
+								v-for="(item,index) in goods_label.data" 
+								:key="index"
+								@click="cli_item(item,index)" 
+								:class="{active:item.status == 2}">
+									{{item.title}}
+								</view>
+							</view>
+						</view>
+						<view class="item">
+							<view class="item_tit">
+								金重
+							</view>
+							<view class="item_child">
+								<view class="child_v">
+									<input type="text" placeholder="最低" v-model="min_g" name="" id="">
+								</view>
+								<view class="u-m-l-10 u-m-r-10" style="color: #999999;">一</view>
+								<view class="child_v">
+									<input type="text" placeholder="最高" v-model="max_g">
+								</view>
+							</view>
+						</view>
+				
+						<view class="but">
+							<view @click="reset">
+								重置
+							</view>
+							<view @click="shop_confim">确定</view>
+						</view>
+						<view class="" style="height: 100rpx;"></view>
+					</view>
+				</u-popup>
+			</view>
 		</view>
 		<view style="padding-top: 200rpx;" v-if="shop_list.length === 0">
 			<u-empty text="暂无商品" mode="list"></u-empty>
@@ -80,7 +131,6 @@
 					</view>
 				</view>
 			</view>
-			
 			<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20" />
 		</scroll-view>
 	</view>
@@ -90,27 +140,12 @@
 	export default {
 		data() {
 			return {
-				search_txt: '',
-				puytcopup: 0, //普通优惠券
-				tops: 0,
+				showFilter: false,
 				swiperCurrent: 0,
 				swiperCurrent_b: 0,
-				backgroundColor: '', //标题栏背景色
-				headcolor: '#fff', //消息颜色
-				indexbackcolor: 'rgba(255,2555,255,0.4)', //导航栏搜索框背景色
-				end_time: '', //秒杀到期
-				end_seckill: '00:00:00:00', //倒计时
-				nav_ind: 0, //导航
-				show: true,
-				value1: 1,
 				index_data: '', //首页数据
 				shop_list: '',
 				list: '',
-				huiy_show: false, //会员状态
-				// coupon_data:'',//优惠券
-				ptcoupon: false, //普通优惠券状态
-				xrcoupon: false, //新人优惠券状态
-				second: '',
 				king_user: '',
 				code: '',
 				member_id: '',
@@ -123,7 +158,7 @@
 				last_page: 1,
 				loadingText: '点击上拉加载更多',
 				labels: 1,
-				label_list: {},
+				goods_label: {},
 				keyword: '',
 				shop_list: [],
 				firstList: [],
@@ -138,7 +173,10 @@
 				},
 				moreStatus: 'loadmore',
 				banner_list: [],
-				gold_price: ''
+				gold_price: '',
+				price_type: '', // 价格排序 1-降序 2-升序	
+				min_g: '', //最小重量
+				max_g: '', //最大重量
 			}
 		},
 		onUnload() {
@@ -169,14 +207,62 @@
 		},
 		
 		methods: {
+			//重置
+			reset() {
+				this.min_g = '';
+				this.max_g = '';
+				this.goods_label.data.forEach(item=>{
+					item.status = 1;
+				});
+				this.queryParams.page = 1;
+				this.queryList();
+				this.showFilter = false;
+			},
+			//确定
+			shop_confim() {
+				let aid = ''
+				let arr = []
+				this.goods_label.data.forEach(item=>{
+					if (item.status == 2) {
+						arr.push(item.id)
+					}
+					aid = arr.join(',')
+				})
+				this.showFilter = false;
+				this.queryParams.page = 1;
+				this.queryList({
+					shop_good_label_id: aid,
+					min_g: this.min_g,
+					max_g: this.max_g
+				});
+			},
+			// 点击多选标签
+			cli_item(v, i){
+				if (v.status == 1) {
+					v.status = 2
+				} else {
+					v.status = 1
+				}
+			},
+			// 价格筛选
+			price_change() {
+				if (this.price_type == '') {
+					this.price_type = 1;
+				} else if (this.price_type == 1) {
+					this.price_type = 2;
+				} else if (this.price_type == 2) {
+					this.price_type = 1;
+				}
+				this.queryParams.page = 1;
+				this.queryList()
+			},
 			//每周上新的指示点
 			swiperChange_b(e) {
-				const index = e.detail.current;
-				this.swiperCurrent_b = index;
+				this.swiperCurrent_b = e.detail.current;
 			},
 			//每周上线进详情
-			news_shop(e) {
-				this.com.navto('./shop_detail?shop_id=' + e)
+			news_shop(id) {
+				this.com.navto(`./shop_detail?shop_id=${id}`)
 			},
 			urlParse() {
 				let url = window.location.search;
@@ -228,8 +314,8 @@
 					}
 				})
 			},
-			queryList() {
-				
+			// 请求产品列表
+			queryList(data) {
 				uni.showLoading({
 					mask: true
 				})
@@ -256,17 +342,23 @@
 						uni.hideLoading()
 					})
 				} else {
-					this.$api.get('shop/getSurmerGood', {
+					const query = {
 						cate_fist_id: this.firstList[this.first].id,
 						shop_label_cate_id: this.secondList && this.secondList[this.second] && this.secondList[this.second].id,
 						page: this.queryParams.page,
 						limit: this.queryParams.limit,
-					}).then((res) => {
+						price: this.price_type,
+					}
+					if (data) {
+						if (data.min_g) query.min_g = data.min_g;
+						if (data.max_g) query.max_g = data.max_g;
+						if (data.shop_good_label_id) query.shop_good_label_id = data.shop_good_label_id;
+					}
+					this.$api.post('goods', query).then((res) => {
 						uni.hideLoading()
 						if (res.status == 1) {
-							this.shop_list = this.queryParams.page === 1 ? res.data.data : [...this.shop_list, ...
-								res.data.data
-							];
+							const list = this.price_type ? res.data.data : res.data.data.sort((a, b) => b.sort-a.sort);
+							this.shop_list = this.queryParams.page === 1 ? list : [...this.shop_list, ...list];
 							this.queryParams.last_page = res.data.last_page;
 							this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
 						}
@@ -374,11 +466,12 @@
 						}
 					}
 				})
-				// this.$api.get('member').then(res => {
-				// 	if (res.status == 1) {
-						
-				// 	}
-				// })
+				this.$api.get('screen_label').then(res => {
+					if (res.status == 1) {
+						this.goods_label = res.data;
+					}
+				})
+				
 			},
 		},
 	}
@@ -471,6 +564,21 @@
 	
 	.goods-tabs {
 		margin-top: 24rpx;
+	}
+	.filter-box {
+		color: #666;
+		background-color: #fff;
+		margin: 0 24rpx 10rpx 24rpx;
+		padding: 0 100rpx;
+		border-radius: 4rpx;
+		height: 60rpx;
+		display: flex;
+		align-items: center;
+		font-size: 24rpx;
+		.item {
+			flex: 1;
+			text-align: center;
+		}
 	}
 	
 	.king_pic_a{
@@ -657,6 +765,79 @@
 	
 		.cont_item:nth-child(2n+2) {
 			margin-right: 0;
+		}
+	}
+	
+	.popups {
+		padding: calc(var(--status-bar-height) + 80rpx) 30rpx calc(var(--window-bottom) + 130rpx) 30rpx;
+		width: 640rpx;
+		position: relative;
+	
+		.but {
+			text-align: center;
+			margin-top: 50rpx;
+			left: 0;
+			right: 0;
+			bottom: calc(var(--window-bottom) + 20rpx);
+			width: 100%;
+			font-size: 26upx;
+			display: flex;
+			justify-content: space-around;
+			height: 70rpx;
+			line-height: 68upx;
+	
+			view {
+				width: 45%;
+				border-radius: 50rpx;
+			}
+	
+			view:nth-child(1) {
+				border: 1rpx solid #666;
+				background-color: white;
+			}
+	
+			view:nth-child(2) {
+				border: 1rpx solid #2A3E7B;
+				background-color: #2A3E7B;
+				color: white;
+			}
+		}
+	
+		.item {
+			.item_tit {
+				text-align: left;
+				font-weight: bold;
+				font-size: 26upx;
+			}
+	
+			.item_child {
+				width: 100%;
+				display: flex;
+				flex-wrap: wrap;
+				font-size: 24upx;
+				align-items: center;
+				.child_v {
+					width: 31%;
+					margin: 16rpx 1%;
+					overflow: hidden;
+					white-space: nowrap;
+					height: 56rpx;
+					background-color: #f5f5f5;
+					line-height: 54rpx;
+					border-radius: 50rpx;
+	
+					&.active {
+						background-color: #f6f8ff;
+						border: 1rpx solid #2d407a;
+						color: #2d407a;
+					}
+	
+					input {
+						height: 56rpx;
+						font-size: 24rpx;
+					}
+				}
+			}
 		}
 	}
 </style>
