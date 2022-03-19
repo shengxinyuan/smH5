@@ -60,25 +60,23 @@
 			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="firstList" active-color="#010000" bg-color="transparent"
 				inactive-color="#010000" :show-bar="false" font-size="30" height="50" :current="first" @change="changeFirst"></u-tabs>
 			<u-tabs ref="tabs" :is-scroll="true" name="title" :list="secondList" active-color="#010000" bg-color="transparent"
-				inactive-color="#6a6456" :show-bar="false" font-size="18" height="50" :current="second" @change="changeSecond"></u-tabs>
+				inactive-color="#6a6456" :show-bar="false" font-size="22" height="50" :current="second" @change="changeSecond"></u-tabs>
 		</view>
 		<view style="padding-top: 200rpx;" v-if="shop_list.length === 0">
 			<u-empty text="暂无商品" mode="list"></u-empty>
 		</view>
 		<scroll-view v-else scroll-y="true" class="goods-list">
 			<view class="cont_list" >
-				<view class="cont_item" v-for="(it,ind) in shop_list" :key="ind" @click="go_shopdetail(it)">
+				<view class="cont_item" v-for="(it,ind) in shop_list" :key="it.id" @click="go_shopdetail(it)">
 					<image class="images" :src="it.image" mode="aspectFill"></image>
 					<view class="it_tit">
 						{{it.title}}
 					</view>
 					<view class="it_price" >
 						<text style="font-size: 22rpx;">￥</text>{{ it.price }}
-					</view>
-					<view class="it_selt">
-						<view class="it_selt_r">
+						<text class="item_sale">
 							已售{{it.sale}}件
-						</view>
+						</text>
 					</view>
 				</view>
 			</view>
@@ -216,8 +214,7 @@
 					if (res.status == 1) {
 						this.firstList = res.data;
 						this.secondList = this.firstList[this.first].children;
-						this.isCustom = this.firstList[this.first] && this.firstList[this.first].member_id > 0 ?
-							1 : 0;
+						this.isCustom = this.firstList[this.first] && this.firstList[this.first].member_id > 0 ? 1 : 0;
 						this.queryList();
 					}
 				}).catch(() => {
@@ -232,6 +229,10 @@
 				})
 			},
 			queryList() {
+				
+				uni.showLoading({
+					mask: true
+				})
 				if (this.isCustom === 1) {
 					this.$api.get('shop/getAllGood', {
 						cate_id: this.firstList[this.first].id,
@@ -256,10 +257,8 @@
 					})
 				} else {
 					this.$api.get('shop/getSurmerGood', {
-						cate_first_id: this.firstList[this.first].id,
-						cate_id: this.secondList && this.secondList[this.second] && this.secondList[this.second]
-							.id,
-						member_id: this.member_id,
+						cate_fist_id: this.firstList[this.first].id,
+						shop_label_cate_id: this.secondList && this.secondList[this.second] && this.secondList[this.second].id,
 						page: this.queryParams.page,
 						limit: this.queryParams.limit,
 					}).then((res) => {
@@ -280,12 +279,27 @@
 			changeFirst(index) {
 				this.first = index;
 				this.isCustom = this.firstList[index] && this.firstList[index].member_id > 0 ? 1 : 0;
-				this.second = 0;
-				this.secondList = this.firstList[index].children;
-				this.queryParams.page = 1;
-				setTimeout(() => {
-					this.queryList();
-				}, 0)
+				if (this.isCustom) {
+						this.second = 0;
+						this.secondList = this.firstList[index].children;
+						this.queryParams.page = 1;
+						setTimeout(() => {
+							this.queryList();
+						}, 0)
+				} else {
+					this.$api.get('screen', {
+						cate_id: this.firstList[index].id
+					}).then(res => {
+						if (res.status == 1) {
+							const list = res.data.find(item => item.name === '款式标签')
+							this.second = 0;
+							this.secondList = list.data;
+							setTimeout(() => {
+								this.queryList();
+							}, 0)
+						}
+					})
+				}
 			},
 			// 二级目录切换
 			changeSecond(index) {
@@ -353,17 +367,18 @@
 				}).then(res => {
 					if (res.status == 1) {
 						this.king_user = res.data
-					}
-				})
-				this.$api.get('member').then(res => {
-					if (res.status == 1) {
-						if (res.data && res.data.banner_list) {
+						if (res.data && res.data.banner_list && res.data.banner_list.length) {
 							this.banner_list = res.data.banner_list.map((item) => ({image: item.image_url}))
 						} else {
 							this.banner_list = [{image: 'https://img.alicdn.com/imgextra/i3/O1CN01ywGbA51tlwYSmJGWI_!!6000000005943-0-tps-1170-859.jpg'}]
 						}
 					}
 				})
+				// this.$api.get('member').then(res => {
+				// 	if (res.status == 1) {
+						
+				// 	}
+				// })
 			},
 		},
 	}
@@ -457,85 +472,7 @@
 	.goods-tabs {
 		margin-top: 24rpx;
 	}
-	// .goods-list {
-	// 	width: 100%;
-		
-	// 	border-top: 1px solid #eee;
-	// 	.list {
-	// 		width: 100%;
-	// 		display: flex;
-	// 		flex-wrap: wrap;
-	// 		padding: 0 3%;
-	// 		.item {
-	// 			width: 49%;
-	// 			margin-right: 2%;
-	// 			border-radius: 8px;
-	// 			background-color: white;
-	// 			margin-top: 5px;
-	// 			overflow: hidden;
-	// 			position: relative;
-	// 			padding-bottom: 5px;
-	// 		}
-	// 	}
-		
-
-	// 	.cont_item {
-	// 		margin: 0 32rpx;
-	// 		background-color: white;
-	// 		overflow: hidden;
-	// 		display: flex;
-	// 		align-items: center;
-	// 		border-bottom: 1px solid #eee;
-	// 		color: rgb(96, 98, 102);
-
-	// 		.img-box {
-	// 			margin: 20rpx 0;
-	// 			margin-right: 32rpx;
-	// 			width: 200rpx;
-	// 			height: 200rpx;
-
-	// 			.images {
-	// 				display: block;
-	// 				width: 200rpx;
-	// 				height: 200rpx;
-	// 				border-radius: 10rpx;
-	// 				display: block;
-	// 			}
-	// 		}
-
-	// 		.base-cont {
-	// 			flex: 1;
-	// 			overflow: hidden;
-	// 			font-size: 24rpx;
-
-	// 			.title {
-	// 				font-size: 32rpx;
-	// 				margin-bottom: 10rpx;
-	// 				height: 80rpx;
-	// 				color: #414141;
-	// 			}
-	// 		}
-
-	// 		.index-cont {
-	// 			display: flex;
-	// 			font-size: 24rpx;
-	// 			text-align: right;
-	// 			font-size: 30rpx;
-
-	// 			.item-sale {
-	// 				width: 400rpx;
-	// 				text-align: left;
-	// 				font-size: 24rpx;
-	// 			}
-
-	// 			.price {
-	// 				flex: 1;
-	// 				text-align: right;
-	// 				color: #ea5b72;
-	// 			}
-	// 		}
-	// 	}
-	// }
+	
 	.king_pic_a{
 		margin: 32rpx 16rpx;
 		display: flex;
@@ -599,7 +536,6 @@
 		.bann_h{
 			width: 70rpx;
 			height: 10rpx;
-			// background-color: rgba(255,255,255,0.3);
 			background-color: #eee;
 			border-radius: 40rpx;
 		}
@@ -658,8 +594,6 @@
 			.images {
 				width: 350rpx;
 				height: 350rpx;
-				// background: url(https://zuanshi.semoh.cn/applet_static/loading.gif) no-repeat center;
-				// background-size: 100% 84%;
 			}
 	
 			.it_tit {
@@ -674,8 +608,15 @@
 	
 			.it_price {
 				padding-left: 10rpx;
-				font-weight: bold;
 				font-size: 30rpx;
+				color: #f00;
+				.item_sale {
+					color: #666;
+					font-size: 22rpx;
+					font-weight: normal;
+					float: right;
+					margin-right: 10rpx;
+				}
 			}
 	
 			.it_selt {
