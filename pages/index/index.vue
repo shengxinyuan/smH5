@@ -157,7 +157,6 @@
 				current_page: 1,
 				last_page: 1,
 				loadingText: '点击上拉加载更多',
-				labels: 1,
 				goods_label: {},
 				keyword: '',
 				shop_list: [],
@@ -193,20 +192,24 @@
 		onLoad(op) {
 			const urlQuery = this.urlParse()
 			if (urlQuery.token) {
-				this.member_id = urlQuery.name
-				uni.setStorageSync('token', urlQuery.token);
-				uni.setStorageSync('member_id', this.member_id);
-				uni.setStorageSync('env', urlQuery.env || 'pre');
-				
-				this.getAllCategory();
-				this.query_member_info();
-				this.query_index_data();
+				this.getData(urlQuery);
 			} else {
 				this.wxAuthorize(op.data)
 			}
 		},
 		
 		methods: {
+			getData(params) {
+				const { member_id, token, env } = params;
+				this.member_id = member_id;
+				uni.setStorageSync('token', token);
+				uni.setStorageSync('member_id', member_id);
+				uni.setStorageSync('env', env || 'prod');
+				
+				this.getAllCategory();
+				this.query_member_info();
+				this.query_index_data();
+			},
 			//重置
 			reset() {
 				this.min_g = '';
@@ -422,7 +425,8 @@
 				if (r != null) return unescape(r[2]);
 				return null;
 			},
-			wxAuthorize(a) {
+			// 微信鉴权
+			wxAuthorize(data) {
 				let link = window.location.href;
 				let code = this.GetQueryString('code') // code
 				console.log(code)
@@ -433,26 +437,24 @@
 					window.location.href =
 						`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
 				} else {
-					let state_s = this.stateNum('state') // state
-					this.stat = JSON.parse(a)
+					this.stat = JSON.parse(data);
 					//店铺用户id
 					if (this.stat.name) {
-						console.log(this.stat)
-						uni.setStorageSync('member_id', this.stat.name)
-						console.log(code)
 						this.$api.get('wechat_login', {
 							code: code
 						}).then(res => {
-							console.log(res.message)
 							if (res.status == 1) {
-								uni.setStorageSync('token', res.data.token)
-								this.labels = 1
-								this.query_member_info()
+								this.getData({
+									token: res.data.token,
+									member_id: this.stat.name,
+									env: 'prod',
+								});
 							}
 						})
 					}
 				}
 			},
+			// 获取用户信息
 			query_member_info() {
 				this.$api.get('manage', {
 					member_id: uni.getStorageSync('member_id')
