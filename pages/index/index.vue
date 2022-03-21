@@ -2,7 +2,6 @@
 	<view class="content">
 
 		<!-- 自定义头部 -->
-		
 		<view class="input-view">
 			<view class="king_position">
 				<image class="imgb" :src="king_user.avatar" mode="aspectFill"></image>
@@ -14,7 +13,7 @@
 		</view>
 
 		<view class="king_backimg">
-			<u-swiper :list="banner_list" height="500"></u-swiper>
+			<u-swiper :list="banner_list" height="400"></u-swiper>
 		</view>
 		
 		<!-- 实时金价 -->
@@ -46,7 +45,7 @@
 		<swiper class="swiper_two" @change="swiperChange_b" :autoplay="true" :circular="true" :interval="4000"
 			:duration="500">
 			<swiper-item v-for="(it,ind) in index_data.news" :key="ind" style="height: 540rpx;"
-				@click="news_shop(it.shop_goods_id)">
+				@click="go_sm_detail(it.shop_goods_id)">
 				<image :src="it.image" mode="aspectFill"></image>
 			</swiper-item>
 		</swiper>
@@ -149,7 +148,6 @@
 				king_user: '',
 				code: '',
 				member_id: '',
-				stat: '',
 				lv: 0,
 				name: '',
 				params: {},
@@ -176,6 +174,7 @@
 				price_type: '', // 价格排序 1-降序 2-升序	
 				min_g: '', //最小重量
 				max_g: '', //最大重量
+				hasGoDetail: false
 			}
 		},
 		onUnload() {
@@ -190,6 +189,7 @@
 			}
 		},
 		onLoad(op) {
+			console.log(op)
 			const urlQuery = this.urlParse()
 			if (urlQuery.token) {
 				this.getData(urlQuery);
@@ -197,18 +197,22 @@
 				this.wxAuthorize(op.data)
 			}
 		},
-		
 		methods: {
 			getData(params) {
-				const { member_id, token, env } = params;
-				this.member_id = member_id;
+				const { name, token, id, type, env } = params;
+				this.member_id = name;
 				uni.setStorageSync('token', token);
-				uni.setStorageSync('member_id', member_id);
+				uni.setStorageSync('member_id', name);
 				uni.setStorageSync('env', env || 'prod');
 				
 				this.getAllCategory();
 				this.query_member_info();
 				this.query_index_data();
+				
+				if(type == 1 && !this.hasGoDetail){
+					this.hasGoDetail = true;
+					this.go_sm_detail(id)
+				}
 			},
 			//重置
 			reset() {
@@ -259,13 +263,13 @@
 				this.queryParams.page = 1;
 				this.queryList()
 			},
-			//每周上新的指示点
+			// 每周上新的指示点
 			swiperChange_b(e) {
 				this.swiperCurrent_b = e.detail.current;
 			},
-			//每周上线进详情
-			news_shop(id) {
-				this.com.navto(`./shop_detail?shop_id=${id}`)
+			// 每周上线进详情
+			go_sm_detail(id) {
+				uni.navigateTo({url: `./shop_detail?shop_id=${id}`})
 			},
 			urlParse() {
 				let url = window.location.search;
@@ -282,16 +286,18 @@
 				}
 				return obj;
 			},
+			// 跳转搜索页
 			search() {
-				this.com.navto('./search');
+				uni.navigateTo({url: './search'});
 			},
 			//点击材质
-			go_textrue(e) {
-				let a = JSON.stringify(this.index_data.label)
-				if (a) {
-					this.com.navto('/pages/index/nine_nav?id=' + e + '&data=' + a)
+			go_textrue(id) {
+				const label = JSON.stringify(this.index_data.label)
+				if (label) {
+					uni.navigateTo({url: `/pages/index/nine_nav?id=${id}&data=${label}`});
 				}
 			},
+			// 获取目录
 			getAllCategory() {
 				uni.showLoading({
 					mask: true
@@ -302,21 +308,13 @@
 					uni.hideLoading()
 					if (res.status == 1) {
 						this.firstList = res.data;
-						this.secondList = this.firstList[this.first].children;
-						this.isCustom = this.firstList[this.first] && this.firstList[this.first].member_id > 0 ? 1 : 0;
-						this.queryList();
+						this.changeFirst(0)
 					}
 				}).catch(() => {
 					uni.hideLoading()
 				})
 			},
-			query_index_data () {
-				this.$api.get('index').then(res => {
-					if (res.status == 1) {
-						this.index_data = res.data
-					}
-				})
-			},
+			
 			// 请求产品列表
 			queryList(data) {
 				uni.showLoading({
@@ -404,51 +402,41 @@
 					this.queryList();
 				}, 0)
 			},
-			go_shopdetail(item) {
-				if (this.isCustom) {
-					this.com.navto('../../pages/index/shop_detail_custom?shop_id=' + item.id)
-				} else {
-					this.com.navto('../../pages/index/shop_detail?shop_id=' + item.id)
-				}
-			},
-			//code
+			
+			// code （原代码）
 			GetQueryString(code) {
 				var reg = new RegExp("(^|&)" + code + "=([^&]*)(&|$)");
 				let r = window.location.search.substr(1).match(reg);
 				if (r != null) return unescape(r[2]);
 				return null;
 			},
-			//参数
+			// 参数 （原代码）
 			stateNum(state) {
 				var reg = new RegExp("(^|&)" + state + "=([^&]*)(&|$)");
 				let r = window.location.search.substr(1).match(reg);
 				if (r != null) return unescape(r[2]);
 				return null;
 			},
-			// 微信鉴权
+			// 微信鉴权 （原代码）
 			wxAuthorize(data) {
 				let link = window.location.href;
 				let code = this.GetQueryString('code') // code
-				console.log(code)
+				console.log('code',code, link)
 				// 如果拿到code，调用授权接口，没有拿到就跳转微信授权链接获取   
 				if (code == null || code == "") {
 					let appid = 'wxa41c78ae3465d0fa';
 					let uri = encodeURIComponent(link);
 					window.location.href =
-						`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${a}#wechat_redirect`;
+						`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${data}#wechat_redirect`;
 				} else {
-					this.stat = JSON.parse(data);
+					const urlData = JSON.parse(data);
 					//店铺用户id
-					if (this.stat.name) {
+					if (urlData.name) {
 						this.$api.get('wechat_login', {
 							code: code
 						}).then(res => {
 							if (res.status == 1) {
-								this.getData({
-									token: res.data.token,
-									member_id: this.stat.name,
-									env: 'prod',
-								});
+								this.getData(Object.assign({}, urlData, {token: res.data.token, env: 'prod'}));
 							}
 						})
 					}
@@ -473,7 +461,22 @@
 						this.goods_label = res.data;
 					}
 				})
-				
+			},
+			// 获取每周上新数据
+			query_index_data () {
+				this.$api.get('index').then(res => {
+					if (res.status == 1) {
+						this.index_data = res.data
+					}
+				})
+			},
+			// 跳转产品详情
+			go_shopdetail(item) {
+				if (this.isCustom) {
+					uni.navigateTo({url: `../../pages/index/shop_detail_custom?shop_id=${item.id}`});
+				} else {
+					this.go_sm_detail(item.id)
+				}
 			},
 		},
 	}
