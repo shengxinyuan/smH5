@@ -1,26 +1,10 @@
 <script>
 	export default {
 		onLaunch: function() {
-			console.log('App Launch')
-			// if('caches' in window){
-			// 	console.log(1);
-			// }
-			// caches.open('token').then(function (cache){
-			// 	console.log(cache);
-			// 	cache.match('name').then(function(matchedResponse){
-			// 		console.log(matchedResponse);
-			// 	})
-			// });
-			// let token = uni.getStorageSync('token')
-			// console.log(token);
-			// uni.setStorageSync('member_id',378)
 		},
 		onShow: function() {
-			// console.log('App Show')
-			// this.$cache.set('name','wq',Date.parse(new Date()))
 		},
 		onHide: function() {
-			console.log('App Hide')
 		}
 	}
 </script>

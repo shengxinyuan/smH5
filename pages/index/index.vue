@@ -189,7 +189,7 @@
 			}
 		},
 		onLoad(op) {
-			console.log(op)
+			console.log('onLoad', op)
 			const urlQuery = this.urlParse()
 			if (urlQuery.token) {
 				this.getData(urlQuery);
