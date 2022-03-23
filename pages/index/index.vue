@@ -208,6 +208,7 @@
 				this.getAllCategory();
 				this.query_member_info();
 				this.query_index_data();
+				this.get_gold_price();
 				
 				if(type == 1 && !this.hasGoDetail){
 					this.hasGoDetail = true;
@@ -478,6 +479,15 @@
 					this.go_sm_detail(item.id)
 				}
 			},
+			get_gold_price() {
+				this.$api.get('gold_price', {
+					id: this.member_id
+				}).then(res => {
+					if (res.status == 1) {
+						console.log(123)
+					}
+				})
+			}
 		},
 	}
 </script>
