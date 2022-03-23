@@ -20,7 +20,7 @@
 		<view class="king_pic_a">
 			<zs-title :titleRed="'实时'" :title="'金价'" :page_show="true"></zs-title>
 			<view class="txt" v-if="gold_price">
-				<text class="red">{gold_price}</text>元 / 克
+				<text class="red">{{gold_price}} </text>元/克
 			</view>
 		</view>
 		<!-- 九宫格 -->
@@ -479,12 +479,13 @@
 					this.go_sm_detail(item.id)
 				}
 			},
+			// 获取金价
 			get_gold_price() {
 				this.$api.get('gold_price', {
 					id: this.member_id
 				}).then(res => {
 					if (res.status == 1) {
-						console.log(123)
+						this.gold_price = res.data[0].sell_price
 					}
 				})
 			}
@@ -601,12 +602,13 @@
 		display: flex;
 		align-items: center;
 		.txt{
-			margin-left: 60rpx;
+			margin-left: 40rpx;
 			color: #999;
 			line-height: 60rpx;
 		}
 		.red {
 			color: #f00;
+			margin-right: 10rpx;
 		}
 	}
 	.nine_g {
