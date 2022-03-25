@@ -194,6 +194,7 @@
 			if (urlQuery.token) {
 				this.getData(urlQuery);
 			} else {
+				console.log('wxAuthorize');
 				this.wxAuthorize(op.data)
 			}
 		},
@@ -422,7 +423,7 @@
 			wxAuthorize(data) {
 				let link = window.location.href;
 				let code = this.GetQueryString('code') // code
-				console.log('code',code, link)
+				console.log('code',code, link, data)
 				// 如果拿到code，调用授权接口，没有拿到就跳转微信授权链接获取   
 				if (code == null || code == "") {
 					let appid = 'wxa41c78ae3465d0fa';
@@ -430,16 +431,21 @@
 					window.location.href =
 						`https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${uri}&response_type=code&scope=snsapi_base&state=${data}#wechat_redirect`;
 				} else {
-					const urlData = JSON.parse(data);
-					//店铺用户id
-					if (urlData.name) {
-						this.$api.get('wechat_login', {
-							code: code
-						}).then(res => {
-							if (res.status == 1) {
-								this.getData(Object.assign({}, urlData, {token: res.data.token, env: 'prod'}));
-							}
-						})
+					if (data) {
+						const urlData = JSON.parse(data || {});
+						if (urlData && urlData.name) {
+							this.$api.get('wechat_login', {
+								code: code
+							}).then(res => {
+								if (res.status == 1) {
+									this.getData(Object.assign({}, urlData, {token: res.data.token, env: 'prod'}));
+								}
+							}).catch(() => {
+								this.getData({token: uni.getStorageSync('token'), env: 'prod', name: uni.getStorageSync('member_id')});
+							});
+						}
+					} else {
+						this.getData({token: uni.getStorageSync('token'), env: 'prod', name: uni.getStorageSync('member_id')});
 					}
 				}
 			},
