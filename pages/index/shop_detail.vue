@@ -436,9 +436,7 @@
 				this.com.navto(e)
 			},
 			skipIndex(){
-				uni.switchTab({
-					url: './index'
-				})
+				uni.navigateBack()
 			},
 			//点击头部
 			head_nav_cli(e) {

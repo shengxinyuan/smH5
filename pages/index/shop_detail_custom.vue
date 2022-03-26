@@ -188,9 +188,7 @@
 			},
 			// 去首页
 			skipIndex(){
-				uni.switchTab({
-					url: './index'
-				})
+				uni.navigateBack()
 			},
 			//轮播指示点
 			swiperChange(e) {

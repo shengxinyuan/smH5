@@ -69,14 +69,13 @@
 						this.list = this.queryParams.page === 1 ? res.data.data : [...this.list, ...res.data.data];
 						this.queryParams.last_page = res.data.last_page;
 						this.moreStatus = res.data.last_page === res.data.current_page ? 'nomore' : 'loadmore';
-						console.log(this.list)
 					}
 					
 				})
 			},
 			//订单详情
 			order_detail({id, order_type, bn_id}){
-				this.com.navto(`./orderDetails?order_id=${ order_type === '1' ? bn_id : id}&order_type=${order_type}`)
+				this.com.navto(`./orderDetails?order_id=${bn_id}&order_type=${order_type}`)
 			},
 			cancel_detail(e,i){
 				this.$api.put('orders',{id:e,type:2,is_h5:1}).then(res=>{

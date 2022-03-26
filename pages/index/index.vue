@@ -503,7 +503,6 @@
 				})
 			},
 			navigateTo(urlObj) {
-				console.log(123123, this.inApp)
 				if (this.inApp) {
 					uni.showToast({
 						title: 'APP内仅能预览店铺，无法购买！',
