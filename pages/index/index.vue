@@ -219,7 +219,9 @@
 				
 				if(type == 1 && !this.hasGoDetail){
 					this.hasGoDetail = true;
-					this.go_sm_detail(id)
+					setTimeout(() => {
+						this.go_sm_detail(id)
+					}, 200)
 				}
 			},
 			//重置

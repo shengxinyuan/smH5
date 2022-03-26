@@ -176,23 +176,14 @@
 									<text>/g</text>
 								</view>
 								<view class="">库存：{{it.stock}}</view>
-								<!-- <view class="jg_r" v-if="!vip_type">
-									￥<text>{{it.price_normal}}</text>
-								</view>
-								<view class="jg_r" v-else>
-									￥<text>{{it.price_vip}}</text>
-								</view> -->
 							</view>
 							<view class="jg_sty_t" style="line-height: 40rpx;">
 								<!-- 备注：{{it.remark || '无'}} -->
 								<text style="width: 50%;">手寸：{{it.ring_arm_size || '无'}}</text>
 								<text style="width: 50%;">备注：{{it.remark || '无'}}</text>
 							</view>
-							<view class="jg_r" v-if="!vip_type">
-								￥<text>{{it.price_normal}}</text>
-							</view>
-							<view class="jg_r" v-else>
-								￥<text>{{it.price_vip}}</text>
+							<view class="jg_r">
+								￥<text>{{it.price_vip}} 000</text>
 							</view>
 						</view>
 						<view style="height: 180rpx;"></view>
@@ -222,7 +213,6 @@
 			return {
 				value: 1,
 				shop_num: 1,
-				vip_type: false, //会员状态
 				shop_type: 0, //按钮状态
 				jg_ind: '', //sku套装id
 				bgcolor: '', //背景色
@@ -277,17 +267,7 @@
 			}
 		},
 		onLoad(options) {
-			// console.log(options)
-			//接收传值,id里面放的是标题，因为测试数据并没写id 
 			this.shop_id = options.shop_id;
-			let vip = uni.getStorageSync('viptype')
-			// console.log(vip)
-			// 会员
-			if (vip) {
-				this.vip_type = true
-			} else {
-				this.vip_type = false
-			}
 			this.page_render()
 		},
 		onReady: function(res) {
@@ -303,11 +283,9 @@
 				}
 			},
 			zanting() {
-				// this.autoplay = false
 				this.videoShow = false
 			},
 			valChange(e) {
-				// console.log('当前值为: ' + e.value)
 				this.shop_num = e.value
 			},
 			//    视频暂停
@@ -515,7 +493,6 @@
 					type: 0,
 					id: this.shoptype_id,
 					member_id: uni.getStorageSync('member_id')
-					// member_id: 378
 				}).then(res => {
 					console.log(res)
 					if (res.status == 1) {
