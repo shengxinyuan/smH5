@@ -174,7 +174,8 @@
 				price_type: '', // 价格排序 1-降序 2-升序	
 				min_g: '', //最小重量
 				max_g: '', //最大重量
-				hasGoDetail: false
+				hasGoDetail: false,
+				inApp: false,
 			}
 		},
 		onUnload() {
@@ -190,7 +191,12 @@
 		},
 		onLoad(op) {
 			console.log('onLoad', op)
+			
 			const urlQuery = this.urlParse()
+			console.log(urlQuery)
+			if (urlQuery.inApp == '1') {
+				this.inApp = true;
+			}
 			if (urlQuery.token) {
 				this.getData(urlQuery);
 			} else {
@@ -271,7 +277,7 @@
 			},
 			// 每周上线进详情
 			go_sm_detail(id) {
-				uni.navigateTo({url: `./shop_detail?shop_id=${id}`})
+				this.navigateTo({url: `./shop_detail?shop_id=${id}`})
 			},
 			urlParse() {
 				let url = window.location.search;
@@ -290,13 +296,13 @@
 			},
 			// 跳转搜索页
 			search() {
-				uni.navigateTo({url: './search'});
+				this.navigateTo({url: './search'});
 			},
 			//点击材质
 			go_textrue(id) {
 				const label = JSON.stringify(this.index_data.label)
 				if (label) {
-					uni.navigateTo({url: `/pages/index/nine_nav?id=${id}&data=${label}`});
+					this.navigateTo({url: `/pages/index/nine_nav?id=${id}&data=${label}`});
 				}
 			},
 			// 获取目录
@@ -351,6 +357,7 @@
 						page: this.queryParams.page,
 						limit: this.queryParams.limit,
 						price: this.price_type,
+						member_id: this.member_id,
 					}
 					if (data) {
 						if (data.min_g) query.min_g = data.min_g;
@@ -480,7 +487,7 @@
 			// 跳转产品详情
 			go_shopdetail(item) {
 				if (this.isCustom) {
-					uni.navigateTo({url: `../../pages/index/shop_detail_custom?shop_id=${item.id}`});
+					this.navigateTo({url: `../../pages/index/shop_detail_custom?shop_id=${item.id}`});
 				} else {
 					this.go_sm_detail(item.id)
 				}
@@ -491,9 +498,20 @@
 					id: this.member_id
 				}).then(res => {
 					if (res.status == 1) {
-						this.gold_price = res.data[0].sell_price
+						this.gold_price = res.data[0].total_price
 					}
 				})
+			},
+			navigateTo(urlObj) {
+				console.log(123123, this.inApp)
+				if (this.inApp) {
+					uni.showToast({
+						title: 'APP内仅能预览店铺，无法购买！',
+						icon: 'none'
+					})
+				} else {
+					uni.navigateTo(urlObj)
+				}
 			}
 		},
 	}
