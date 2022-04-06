@@ -183,12 +183,14 @@
 			// 去购物车
 			goto_cart() {
 				uni.switchTab({
-					url: '../cart/cart'
+					url: '/pages/cart/cart'
 				})
 			},
 			// 去首页
 			skipIndex(){
-				uni.navigateBack()
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
 			},
 			//轮播指示点
 			swiperChange(e) {

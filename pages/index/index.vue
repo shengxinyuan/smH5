@@ -191,7 +191,6 @@
 		},
 		onLoad(op) {
 			console.log('onLoad', op)
-			
 			const urlQuery = this.urlParse()
 			console.log(urlQuery)
 			if (urlQuery.inApp == '1') {
@@ -279,7 +278,7 @@
 			},
 			// 每周上线进详情
 			go_sm_detail(id) {
-				this.navigateTo({url: `./shop_detail?shop_id=${id}`})
+				this.navigateTo({url: `/pages/index/shop_detail?shop_id=${id}`})
 			},
 			urlParse() {
 				let url = window.location.search;
@@ -298,7 +297,7 @@
 			},
 			// 跳转搜索页
 			search() {
-				this.navigateTo({url: './search'});
+				this.navigateTo({url: '/pages/index/search'});
 			},
 			//点击材质
 			go_textrue(id) {
@@ -489,7 +488,7 @@
 			// 跳转产品详情
 			go_shopdetail(item) {
 				if (this.isCustom) {
-					this.navigateTo({url: `../../pages/index/shop_detail_custom?shop_id=${item.id}`});
+					this.navigateTo({url: `/pages/index/shop_detail_custom?shop_id=${item.id}`});
 				} else {
 					this.go_sm_detail(item.id)
 				}
@@ -511,6 +510,7 @@
 						icon: 'none'
 					})
 				} else {
+					console.log('-------->',urlObj.url);
 					uni.navigateTo(urlObj)
 				}
 			}

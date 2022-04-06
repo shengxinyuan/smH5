@@ -183,7 +183,7 @@
 								<text style="width: 50%;">备注：{{it.remark || '无'}}</text>
 							</view>
 							<view class="jg_r">
-								￥<text>{{it.price_vip}} 000</text>
+								￥<text>{{it.price_vip}}</text>
 							</view>
 						</view>
 						<view style="height: 180rpx;"></view>
@@ -406,7 +406,7 @@
 			//购物车
 			goto_cart() {
 				uni.switchTab({
-					url: '../cart/cart'
+					url: '/pages/cart/cart'
 				})
 			},
 
@@ -414,7 +414,9 @@
 				this.com.navto(e)
 			},
 			skipIndex(){
-				uni.navigateBack()
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
 			},
 			//点击头部
 			head_nav_cli(e) {

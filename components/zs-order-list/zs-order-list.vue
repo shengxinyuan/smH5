@@ -79,15 +79,8 @@
 		},
 		methods:{
 			//取消订单
-			no_order(e,i){
-				this.$api.put('orders',{id:e,is_h5:1}).then(res=>{
-					if(res.status == 1){
-						this.com.msg(res.message)
-						this.com.redto('./order?state='+ 10 +'&index='+ 1)
-					}else{
-						this.com.msg(res.message)
-					}
-				})
+			no_order(id){
+				this.$emit('cancel_detail', id)
 			},
 			//订单详情
 			order_detail(item){

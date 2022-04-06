@@ -10,7 +10,7 @@
  		</view>
  		<view class="box" v-if="page_show">
 			<view v-if="list.length != 0">
-				<zs-order-list :list="list" @order_detail="order_detail" @del_order="del_order"></zs-order-list>
+				<zs-order-list :list="list" @order_detail="order_detail" @del_order="del_order" @cancel_detail="cancel_detail"></zs-order-list>
 				<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20"/>
 			</view> 
 			<view v-else style="padding-top: 25%;"><u-empty text="暂无该类订单" mode="order"></u-empty> </view> 
@@ -42,6 +42,7 @@
  			}
  		},
  		onLoad(op) {
+			
 			this.member_id = uni.getStorageSync('member_id');
 			
 			this.state = op.state
@@ -57,9 +58,9 @@
 			}
 		},
  		methods: {
-			queryList(e){
+			queryList(page){
 				this.$api.get('shop/order/getAllOrder',{
-					page:e,
+					page: page || 1,
 					status: this.current,
 					limit: 10,
 					manage_commercial_id: this.member_id
@@ -77,30 +78,30 @@
 			order_detail({id, order_type, bn_id}){
 				this.com.navto(`./orderDetails?order_id=${bn_id}&order_type=${order_type}`)
 			},
-			cancel_detail(e,i){
-				this.$api.put('orders',{id:e,type:2,is_h5:1}).then(res=>{
+			cancel_detail(id){
+				this.$api.put('orders',{ id, is_h5:1 }).then(res=>{
 					this.com.msg(res.message)
-					if(res.status === 1){
-						this.list.splice(i,1)
+					if (res.status === 1) {
+						this.queryList(1);
 					}
 				})
 			},
 			//页面滑动
 			page_swiper(e){
 				this.page_show = false
-				this.page = 1
+				this.queryParams.page = 1
 				this.list = []
 				this.current_ind = e.detail.current
-				this.queryList(this.page)
+				this.queryList(this.queryParams.page)
 			},
 			// 点击上方状态按钮
  			tabClick(id,index) {
 				this.page_show = false
-				this.page = 1
+				this.queryParams.page = 1
 				this.list = []
  				this.current = id
 				this.current_ind = index
-				this.queryList(this.page)
+				this.queryList(this.queryParams.page)
  			},
  			//删除
 			del_order(e){
