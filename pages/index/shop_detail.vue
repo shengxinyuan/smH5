@@ -132,7 +132,10 @@
 						<image src="/static/index/cart.png" mode="widthFix"></image>
 						<view>购物车</view>
 					</view>
-					<view class="anniu">
+					<view v-if="isApp" class="anniu">
+						<view class="add_car" @click="share">分享</view>
+					</view>
+					<view v-else class="anniu">
 						<view class="add_car" @click="payment_yes(0)">加入购物车</view>
 						<view class="buy" @click="payment_yes(1)">立即购买</view>
 					</view>
@@ -244,7 +247,8 @@
 				videoShow: false,
 				stocks: 1,
 				sw_autoplay: true,
-				previewImage:''
+				previewImage:'',
+				isApp: false
 			};
 		},
 		
@@ -269,6 +273,8 @@
 		onLoad(options) {
 			this.shop_id = options.shop_id;
 			this.page_render()
+			this.isApp = uni.getStorageSync('inApp');
+			console.log(this.isApp)
 		},
 		onReady: function(res) {
 			// #ifndef MP-ALIPAY
@@ -276,6 +282,11 @@
 			// #endif
 		},
 		methods: {
+			share() {
+				uni.navigateTo({
+					url: './mshare?data=' + JSON.stringify(this.shop_det)
+				})
+			},
 			//    视频暂停
 			ZhanTing() {
 				if (this.autoplay == true) {

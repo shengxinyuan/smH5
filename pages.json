@@ -27,6 +27,14 @@
 			}
 		},
 		{
+			"path": "pages/index/mshare",
+			"style": {
+				"navigationBarTitleText": "一键分享",
+				"enablePullDownRefresh": false,
+				"navigationBarBackgroundColor": "#FFFFFF"
+			}
+		},
+		{
 			"path": "pages/index/share",
 			"style": {
 				"navigationBarTitleText": "这里批发黄金真方便",

@@ -195,6 +195,7 @@
 			console.log(urlQuery)
 			if (urlQuery.inApp == '1') {
 				this.inApp = true;
+				uni.setStorageSync('inApp', true);
 			}
 			if (urlQuery.token) {
 				this.getData(urlQuery);
@@ -504,15 +505,15 @@
 				})
 			},
 			navigateTo(urlObj) {
-				if (this.inApp) {
-					uni.showToast({
-						title: 'APP内仅能预览店铺，无法购买！',
-						icon: 'none'
-					})
-				} else {
+				// if (this.inApp) {
+				// 	uni.showToast({
+				// 		title: 'APP内仅能预览店铺，无法购买！',
+				// 		icon: 'none'
+				// 	})
+				// } else {
 					console.log('-------->',urlObj.url);
 					uni.navigateTo(urlObj)
-				}
+				// }
 			}
 		},
 	}

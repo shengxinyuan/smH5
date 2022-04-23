@@ -232,7 +232,7 @@
 						<view class="">￥{{shop_price}}</view>
 						<!-- <view v-else>￥{{zhanshi.money_vip}}</view> -->
 					</view>
-					<view class="first-box-six-min-v">
+					<!-- <view class="first-box-six-min-v">
 						<view>
 							<text>包装费</text>
 						</view>
@@ -255,29 +255,14 @@
 							<text>保价费</text>
 						</view>
 						<view>￥{{nums_bj}}</view>
-					</view>
-					<!-- <view class="first-box-six-min-v">
-						<view>
-							金币抵扣 
-						</view>
-						<view>-￥ {{goldBuckle}}({{goldBuckle * zhanshi.gold_money}}金币)</view>
-					</view>
-					<view class="first-box-six-min-v" @click="skipDiscountSelect">
-						<view>优惠券</view>
-						<view class="min-v-right">
-							<view class="min-v-text">-￥{{coupon}}</view>
-							<view>
-								<u-icon class="icon xiangyou" name="arrow-right"></u-icon>
-							</view>
-						</view>
 					</view> -->
 					<view class="first-box-six-min-v" v-if="current == 0 || current == 1">
 						<view>运费</view>
-						<view>￥{{postage}}</view>
+						<view>包邮</view>
 					</view>
 					<view class="first-box-six-min-v" v-if="current == 3">
 						<view>配送费</view>
-						<view>￥{{zhanshi.shipping_fee}}</view>
+						<view>￥0</view>
 					</view>
 					<view class="first-box-six-min-v-bottom" @click="input_show = !input_show">
 						<view class="min-v-left">
@@ -393,7 +378,7 @@
 				zhengshuTitle:'北京市中工商联珠宝检测中心',
 				packingChargePay:'1.0',
 				goodsMoney:'14748.32',
-				noticeTexts01: '*因珠宝产品属于贵重物品，一旦出库，产品无质量问题暂不退换货品！建议您对已购买产品进行保价，未保价的包裹丢失或毁损的，不予赔偿，公司无需承担赔偿责任！',
+				noticeTexts01: '*因珠宝产品属于贵重物品，一旦出库，产品无质量问题暂不退换货品！',
 				noticeTexts02: '*因珠宝产品属于贵重物品，一旦出库，产品无质量问题暂不退换货品！',
 				ind:1,
 				datas:'',//传递数据
@@ -495,7 +480,7 @@
 				return arr
 			},
 			total_price(){
-				let num = this.shop_price * 1  + this.sign_certificate * 1 + this.hezi_pic * 1 + this.guaqian * 1 + this.nums_bj * 1 + this.postage * 1
+				let num = this.shop_price * 1
 				return num
 			},
 			//最终价格
