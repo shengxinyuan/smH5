@@ -10,8 +10,10 @@
 			@click.stop.prevent="click"
 			:class="{transition: isDock && !isMove }"
 		>
-		
-			<!-- <text>{{ text }}</text> -->
+			<view class="text">
+				<u-icon name="share" size="48" color="#c1964e"></u-icon>
+				<view>分享</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -27,6 +29,10 @@
 			existTabBar:{
 				type: Boolean,
 				default: false
+			},
+			text: {
+				type: String,
+				default: ''
 			}
 		},
 		data() {
@@ -41,7 +47,6 @@
 				windowHeight: 0,
 				isMove: true,
 				edge: 10,
-				text: '按钮'
 			}
 		},
 		mounted() {
@@ -120,14 +125,13 @@
 		}}
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 	.drag {
 		// display: flex;
 		// justify-content: center;
 		// align-items: center;
-		background-image: url(../../static/kefu.png);
-		background-size: 100% 100%;
-		// box-shadow: 0 0 6upx rgba(0, 0, 0, 0.4);
+		box-shadow: 0 0 6upx rgba(0, 0, 0, 0.4);
+		background-color: #fff;
 		color: $uni-text-color-inverse;
 		width: 120upx;
 		height:120upx;
@@ -140,5 +144,14 @@
 			transition: left .3s ease,top .3s ease;
 		}
 	}
-	
+	.text {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		width: 120upx;
+		height:120upx;
+		font-size: 24upx;
+		color: #333;
+	}
 </style>

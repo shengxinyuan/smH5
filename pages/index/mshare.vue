@@ -65,7 +65,7 @@
 				array: [], //处理数据
 				canvasShow: false,
 				goods: [],
-				member: [],
+				member_id: '',
 				goods_data: [],
 				vip_type: false,
 				base: {
@@ -210,7 +210,7 @@
 			})
 			this.datas = JSON.parse(e.data)
 			console.log(this.datas)
-			this.member = uni.getStorageSync('member_info')
+			this.member_id = uni.getStorageSync('member_id')
 			let vip = uni.getStorageSync('viptype')
 			// console.log(vip)
 			// 会员
@@ -265,7 +265,7 @@
 			get_goods_qrcode() {
 				let data = {
 					id: this.datas.id,
-					member_id: this.member.id
+					member_id: this.member_id
 				}
 				console.log(data)
 				this.$api.get('goods_qrcode', data).then(res => {
@@ -319,7 +319,7 @@
 					let data = {
 						id: this.datas.id,
 						type: 1,
-						name: this.member.id
+						name: this.member_id
 					}
 					console.log(data)
 					// #ifdef MP-WEIXIN

@@ -283,8 +283,8 @@
 		},
 		methods: {
 			share() {
-				uni.navigateTo({
-					url: './mshare?data=' + JSON.stringify(this.shop_det)
+				window.uni.webView.navigateTo({
+					url: '/pages/index/mshare?data=' + JSON.stringify(this.shop_det)
 				})
 			},
 			//    视频暂停
@@ -580,7 +580,7 @@
 			},
 			stopPrevent() {},
 			skipShare(){
-				uni.navigateTo({
+				window.uni.navigateTo({
 					url:'./mshare?data='+JSON.stringify(this.shop_det)
 				})
 			}

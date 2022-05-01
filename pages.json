@@ -26,14 +26,13 @@
 				"navigationBarTitleText": "商品列表"
 			}
 		},
-		{
-			"path": "pages/index/mshare",
-			"style": {
-				"navigationBarTitleText": "一键分享",
-				"enablePullDownRefresh": false,
-				"navigationBarBackgroundColor": "#FFFFFF"
-			}
-		},
+		// {
+		// 	"path": "pages/index/mshare",
+		// 	"style": {
+		// 		"navigationStyle": "custom",
+		// 		"navigationBarTitleText": "一键分享"
+		// 	}
+		// },
 		{
 			"path": "pages/index/share",
 			"style": {

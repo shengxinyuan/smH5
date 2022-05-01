@@ -132,6 +132,8 @@
 			</view>
 			<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20" />
 		</scroll-view>
+		
+		<drag-button :isDock="true" :existTabBar="true" text="分享店铺" @btnClick="goAppShare" />
 	</view>
 </template>
 
@@ -223,6 +225,11 @@
 						this.go_sm_detail(id)
 					}, 200)
 				}
+			},
+			goAppShare() {
+				window.uni.webView.navigateTo({
+					url: '/pages/community/shop-code'
+				})
 			},
 			//重置
 			reset() {
