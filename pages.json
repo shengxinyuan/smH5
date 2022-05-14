@@ -225,29 +225,54 @@
 			}
 
 		}
-	],
-	"tabBar": {
-		"color": "#7A7E83",
-		"selectedColor": "#2D407A",
-		"borderStyle": "black",
-		"backgroundColor": "#ffffff",
-		"list": [{
-			"pagePath": "pages/index/index",
-			"iconPath": "static/tabbar/index-fill.png",
-			"selectedIconPath": "static/tabbar/index.png",
-			"text": "首页"
-		}, {
-			"pagePath": "pages/cart/cart",
-			"iconPath": "static/tabbar/cart.png",
-			"selectedIconPath": "static/tabbar/cart-fill.png",
-			"text": "购物车"
-		}, {
-			"pagePath": "pages/my/order",
-			"iconPath": "static/tabbar/my.png",
-			"selectedIconPath": "static/tabbar/my-fill.png",
-			"text": "订单"
-		}]
-	},
+	    ,{
+            "path" : "pages/three_design/three_design",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+        ,{
+            "path" : "pages/customer_service/customer_service",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false,
+				"navigationStyle": "custom"
+            }
+            
+        }
+    ],
+	// "tabBar": {
+	// 	"color": "#7A7E83",
+	// 	"selectedColor": "#2D407A",
+	// 	"borderStyle": "black",
+	// 	"backgroundColor": "#ffffff",
+	// 	"list": [{
+	// 		"pagePath": "pages/index/index",
+	// 		"iconPath": "static/tabbar/index-fill.png",
+	// 		"selectedIconPath": "static/tabbar/index.png",
+	// 		"text": "首页"
+	// 	}, {
+	// 		"pagePath": "pages/three_design/three_design",
+	// 		"iconPath": "static/tabbar/index-fill.png",
+	// 		"selectedIconPath": "static/tabbar/index.png",
+	// 		"text": "3D定制"
+	// 	}, {
+	// 		"pagePath": "pages/cart/cart",
+	// 		"iconPath": "static/tabbar/cart.png",
+	// 		"selectedIconPath": "static/tabbar/cart-fill.png",
+	// 		"text": "购物车"
+	// 	}, {
+	// 		"pagePath": "pages/my/order",
+	// 		"iconPath": "static/tabbar/my.png",
+	// 		"selectedIconPath": "static/tabbar/my-fill.png",
+	// 		"text": "订单"
+	// 	}]
+	// },
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "",

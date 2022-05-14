@@ -18,6 +18,8 @@
  		<view v-else style="width: 100%;height: 100vh;padding: 28% 46%;"> 
  			<u-loading mode="flower" size="60"></u-loading>
  		</view>
+		
+		<zs-tabbar :tab_ind="5"></zs-tabbar>
  	</view>
  </template>
   
@@ -26,7 +28,7 @@
  	export default { 	
  		data() {
  			return {
- 				tabs: [{name:'全部',id:0}, {name:'待确认',id:20}, {name:'待收货',id:30}, {name:'已完成',id:50}],
+ 				tabs: [{name:'全部',id:0}, {name:'待确认',id:20}, {name:'待收货',id:30}, {name:'已完成',id:50}, {name:'3D订单',id: '3d'}],
  				list:[],
  				current: 0,
  				isShow: true,
@@ -38,13 +40,14 @@
 					last_page: 1
 				},
 				moreStatus: 'loadmore',
-				member_id: ''
+				member_id: '',
+				token: ''
  			}
  		},
  		onLoad(op) {
 			
 			this.member_id = uni.getStorageSync('member_id');
-			
+			this.token = uni.getStorageSync('token');
 			this.state = op.state
 			this.current_ind = op.index
 			this.tabClick(0)
@@ -96,6 +99,10 @@
 			},
 			// 点击上方状态按钮
  			tabClick(id,index) {
+				if (id === '3d') {
+					location.href = `http://test-3d.semoh.cn/myOrderList?hideBar=1&env=pre&member_id=${this.member_id}&token=${this.token}`
+					return
+				}
 				this.page_show = false
 				this.queryParams.page = 1
 				this.list = []
@@ -151,7 +158,7 @@
 				display: flex;white-space: nowrap;
 				.swiper_it{
 					display: inline-block;
-					width: 25%;
+					width: 20%;
 				}
 			}
  			.title {

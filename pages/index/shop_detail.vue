@@ -275,6 +275,7 @@
 			this.page_render()
 			this.isApp = uni.getStorageSync('inApp');
 			console.log(this.isApp)
+			Window.hasGoDetail = 1
 		},
 		onReady: function(res) {
 			// #ifndef MP-ALIPAY
@@ -416,7 +417,7 @@
 			},
 			//购物车
 			goto_cart() {
-				uni.switchTab({
+				uni.reLaunch({
 					url: '/pages/cart/cart'
 				})
 			},
@@ -425,7 +426,7 @@
 				this.com.navto(e)
 			},
 			skipIndex(){
-				uni.switchTab({
+				uni.reLaunch({
 					url: '/pages/index/index'
 				})
 			},

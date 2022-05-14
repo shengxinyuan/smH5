@@ -114,9 +114,8 @@
 		<view v-else style="padding-top: 20%;">
 			<zs-login></zs-login>
 		</view>
-		<!-- tabbar -->
-		<!-- <zs-tabbar :tab_ind="4"></zs-tabbar> -->
-		<!-- tabbar -->
+
+		<zs-tabbar :tab_ind="4"></zs-tabbar>
 	</view>
 </template>
 

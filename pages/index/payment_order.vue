@@ -85,8 +85,8 @@
 				if(e  == 1){
 					this.com.rel('./index')
 				}else{
-					uni.switchTab({ 
-						url:'../my/order?state='+10+'&index='+1
+					uni.reLaunch({ 
+						url:'/pages/my/order?state='+10+'&index='+1
 					})
 				}
 			}

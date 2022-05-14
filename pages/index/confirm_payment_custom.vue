@@ -176,8 +176,8 @@
 					})
 					if (res.status === 1) {
 						setTimeout(()=>{
-							uni.switchTab({
-								url: '../my/order?index=1&status=10'
+							uni.reLaunch({
+								url: '/pages/my/order?index=1&status=10'
 							})
 						}, 1000)
 					}

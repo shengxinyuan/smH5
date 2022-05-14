@@ -133,7 +133,9 @@
 			<u-loadmore :status="moreStatus" margin-bottom="120" margin-top="20" />
 		</scroll-view>
 		
-		<drag-button :isDock="true" :existTabBar="true" text="分享店铺" @btnClick="goAppShare" />
+		<drag-button v-if="inApp" :isDock="true" :existTabBar="true" text="分享店铺" @btnClick="goAppShare" />
+		
+		<zs-tabbar :tab_ind="1"></zs-tabbar>
 	</view>
 </template>
 
@@ -176,7 +178,6 @@
 				price_type: '', // 价格排序 1-降序 2-升序	
 				min_g: '', //最小重量
 				max_g: '', //最大重量
-				hasGoDetail: false,
 				inApp: false,
 			}
 		},
@@ -219,10 +220,10 @@
 				this.query_index_data();
 				this.get_gold_price();
 				
-				if(type == 1 && !this.hasGoDetail){
-					this.hasGoDetail = true;
+				if(type == 1){
+					const hasGoDetail = Window.hasGoDetail;
 					setTimeout(() => {
-						this.go_sm_detail(id)
+						!hasGoDetail && this.go_sm_detail(id)
 					}, 200)
 				}
 			},

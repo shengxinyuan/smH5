@@ -388,8 +388,8 @@
 					url:'/pages/login/download'
 				})
 				return
-				uni.switchTab({
-					url: '../cart/cart'
+				uni.reLaunch({
+					url: '/pages/cart/cart'
 				})
 			},
 
@@ -405,8 +405,8 @@
 					url:'/pages/login/download'
 				})
 				return
-				uni.switchTab({
-					url: './index'
+				uni.reLaunch({
+					url: '/pages/index/index'
 				})
 			},
 			//点击头部
