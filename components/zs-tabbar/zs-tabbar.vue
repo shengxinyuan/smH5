@@ -70,7 +70,7 @@
 					const env = uni.getStorageSync('env');
 					
 					const envStr = env === 'prod' ? '' : 'test-';
-					const queryStr = `?hideBar=1&env=${env}&member_id=${member_id}&token=${token}`;
+					const queryStr = `?hideBar=1&env=${env}&member_id=${member_id}&token=${token}&h5UrlHost=${location.host}`;
 					
 					location.href = `http://${envStr}3d.semoh.cn${queryStr}`;
 				} else if (e == 4) {

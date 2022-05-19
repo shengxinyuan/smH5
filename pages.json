@@ -225,16 +225,6 @@
 			}
 
 		}
-	    ,{
-            "path" : "pages/three_design/three_design",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "",
-                "enablePullDownRefresh": false,
-				"navigationStyle": "custom"
-            }
-            
-        }
         ,{
             "path" : "pages/customer_service/customer_service",
             "style" :                                                                                    

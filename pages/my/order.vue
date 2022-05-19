@@ -100,7 +100,11 @@
 			// 点击上方状态按钮
  			tabClick(id,index) {
 				if (id === '3d') {
-					location.href = `http://test-3d.semoh.cn/myOrderList?hideBar=1&env=pre&member_id=${this.member_id}&token=${this.token}`
+					const env = uni.getStorageSync('env');
+					const envStr = env === 'prod' ? '' : 'test-';
+					const queryStr = `?hideBar=1&env=${env}&member_id=${this.member_id}&token=${this.token}&h5UrlHost=${location.host}`;
+					
+					location.href = `http://${envStr}3d.semoh.cn/myOrderList${queryStr}`;
 					return
 				}
 				this.page_show = false
