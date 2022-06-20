@@ -201,10 +201,10 @@
 			},
 			//物流
 			order_logist_wl(e){
-				this.com.navto('../my/logistr?cont='+e)
+				uni.navigateTo({ url: '../my/logistr?cont='+e })
 			},
 			shouh(){
-				this.com.navto('../service/service')
+				uni.navigateTo({ url: '../service/service' })
 			},
 			// 自定义商品确认收货
 			custom_sure_details(){

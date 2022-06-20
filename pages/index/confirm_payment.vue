@@ -612,10 +612,10 @@
 			},
 			//页面跳转
 			go_pages(e){
-				this.com.navto(e)
+				uni.navigateTo({ url: e })
 			},
 			go_pages_add(){
-				this.com.navto('../my/receiving?is_mine='+ 0 +'&type='+0)
+				uni.navigateTo({ url: '../my/receiving?is_mine='+ 0 +'&type='+0 })
 			},
 			//挂签
 			guaq(e){
@@ -784,7 +784,7 @@
 			//提交订单
 			submit_order(){
 				if(this.address_bier.id === undefined || !this.address_bier){
-					this.com.msg('请添加收货地址')
+					uni.showToast({ icon:'none', title: '请添加收货地址' })
 					return false
 				}
 				let data = {
@@ -821,10 +821,10 @@
 				//送货上门
 				if(this.cli_type){
 					this.cli_type = false
-					this.com.msg('正在生成订单')
+					uni.showToast({ icon:'none', title: '正在生成订单' })
 					this.$api.post('orders',data).then(res=>{
 						console.log(res)
-						this.com.msg(res.message+',请勿操作')
+						uni.showToast({ icon:'none', title: res.message+',请勿操作' })
 						if(res.status == 1){
 							
 							let arr = 2
@@ -842,7 +842,7 @@
 					})
 					
 				}else{
-					this.com.msg('请勿重复点击')
+					uni.showToast({ icon:'none', title: '请勿重复点击' })
 				}
 			}
 		}

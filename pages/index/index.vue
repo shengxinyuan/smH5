@@ -211,8 +211,10 @@
 			getData(params) {
 				const { name, token, id, type, env } = params;
 				this.member_id = name;
+				if (this.member_id) {
+					uni.setStorageSync('member_id', name);
+				}
 				uni.setStorageSync('token', token);
-				uni.setStorageSync('member_id', name);
 				uni.setStorageSync('env', env || 'prod');
 				
 				this.getAllCategory();
@@ -287,7 +289,7 @@
 			},
 			// 每周上线进详情
 			go_sm_detail(id) {
-				this.navigateTo({url: `/pages/index/shop_detail?shop_id=${id}`})
+				uni.navigateTo({url: `/pages/index/shop_detail?shop_id=${id}`})
 			},
 			urlParse() {
 				let url = window.location.search;
@@ -306,13 +308,13 @@
 			},
 			// 跳转搜索页
 			search() {
-				this.navigateTo({url: '/pages/index/search'});
+				uni.navigateTo({url: '/pages/index/search'});
 			},
 			//点击材质
 			go_textrue(id) {
 				const label = JSON.stringify(this.index_data.label)
 				if (label) {
-					this.navigateTo({url: `/pages/index/nine_nav?id=${id}&data=${label}`});
+					uni.navigateTo({url: `/pages/index/nine_nav?id=${id}&data=${label}`});
 				}
 			},
 			// 获取目录
@@ -497,7 +499,7 @@
 			// 跳转产品详情
 			go_shopdetail(item) {
 				if (this.isCustom) {
-					this.navigateTo({url: `/pages/index/shop_detail_custom?shop_id=${item.id}`});
+					uni.navigateTo({url: `/pages/index/shop_detail_custom?shop_id=${item.id}`});
 				} else {
 					this.go_sm_detail(item.id)
 				}
@@ -512,17 +514,6 @@
 					}
 				})
 			},
-			navigateTo(urlObj) {
-				// if (this.inApp) {
-				// 	uni.showToast({
-				// 		title: 'APP内仅能预览店铺，无法购买！',
-				// 		icon: 'none'
-				// 	})
-				// } else {
-					console.log('-------->',urlObj.url);
-					uni.navigateTo(urlObj)
-				// }
-			}
 		},
 	}
 </script>

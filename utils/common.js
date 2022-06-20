@@ -22,27 +22,23 @@ const com = {
 		})
 	},
 	//跳转到某页
-	navto(e){
-		uni.navigateTo({
-			url:e
-		})
+	navto(url){
+		if (window.__wxjs_environment === 'miniprogram') {
+			wx.miniProgram.navigateTo({ 'url': `pages/webview/webview?url=${encodeURIComponent(url)}` })
+		} else {
+			uni.navigateTo({ url })
+		}
 	},
 	//删档跳转
-	redto(e){
-		uni.redirectTo({
-			url:e
-		})
+	redto(url){
+		uni.redirectTo({ url })
 	},
 	//tab页面跳转
-	tab(e){
-		uni.switchTab({
-			url:e
-		})
+	tab(url){
+		uni.switchTab({ url })
 	},
-	rel(e){
-		uni.reLaunch({
-			url:e
-		})
+	rel(url){
+		uni.reLaunch({ url })
 	},
 	//倒计时
 	countDown(time) {

@@ -111,7 +111,7 @@
 			
 			// 添加新地址
 			Add(e){
-				this.com.navto('./addAddress?type='+JSON.stringify(e)+'&is_mine='+ this.is_mine)
+				uni.navigateTo({ url: './addAddress?type='+JSON.stringify(e)+'&is_mine='+ this.is_mine })
 			},
 			// 删除地址
 			del(e){

@@ -41,7 +41,7 @@
 			getcode(){
 				this.time = 60
 				if(this.phone =='' || !(/^1[3456789]\d{9}$/.test(this.phone))){
-					this.com.msg('请检查手机号')
+					uni.showToast({ icon:'none', title: '请检查手机号' })
 				}else{
 					this.yzm_show = false//字段状态
 					this.$api.get('messagecode',{mobile:this.phone}).then(res=>{
@@ -58,7 +58,7 @@
 								}
 							},1000)
 						}else{
-							this.com.msg(res.message)
+							uni.showToast({ icon:'none', title: res.message })
 						}
 					})
 				}
@@ -67,9 +67,9 @@
 			go_ind(){
 				let arr = this.bn == ''? 0 : this.bn
 				if(this.phone == '' || this.codes == ''){ 
-					this.com.msg('请填写手机号或验证码')
+					uni.showToast({ icon:'none', title: '请填写手机号或验证码' })
 				}else if(this.note != this.codes){
-					this.com.msg('验证码错误')
+					uni.showToast({ icon:'none', title: '验证码错误' })
 				}else{
 					this.$api.post('bindingphone',{mobile:this.phone,note:this.codes,openid:uni.getStorageSync('openid'),bn:arr}).then(res=>{
 						console.log(res)
@@ -93,13 +93,13 @@
 							let time = setInterval(()=>{
 								if(arr == 0){
 									clearInterval(time)
-									this.com.rel('../index/index')
+									uni.reLaunch({ url: '../index/index' })
 								}else{
 									arr -= 1 
 								}
 							},1000)
 						}else{
-							this.com.msg(res.message)
+							uni.showToast({ icon:'none', title: res.message })
 						}
 					})
 				}

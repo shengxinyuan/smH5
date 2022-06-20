@@ -91,7 +91,7 @@
 				})
 			},
 			searchClick() {
-				this.com.navto('./search')
+				uni.navigateTo({ url: './search' })
 			},
 			//传值
 			shop_confim(e) {

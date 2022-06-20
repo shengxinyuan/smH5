@@ -79,19 +79,19 @@
 							}
 						})
 					}else if(ind == 1){
-						this.com.navto('../../pages/shop-orders/shop-orders')
+						uni.navigateTo({ url: '../../pages/shop-orders/shop-orders' })
 					}else if(ind == 2){
-						this.com.navto('../../pages/set-shop/set-shop')
+						uni.navigateTo({ url: '../../pages/set-shop/set-shop' })
 					} else if(ind == 3){
-						this.com.navto('../../pages/community/shop-code')
+						uni.navigateTo({ url: '../../pages/community/shop-code' })
 					} else if(ind == 4){
-						this.com.navto('../../pages/community/my-gold-prices')
+						uni.navigateTo({ url: '../../pages/community/my-gold-prices' })
 					}else if(ind == 5){
-						this.com.navto('../../pages/community/talk')
+						uni.navigateTo({ url: '../../pages/community/talk' })
 					} else if(ind == 6){
-						this.com.navto('../../pages/community/community')
+						uni.navigateTo({ url: '../../pages/community/community' })
 					} else if(ind == 7){
-						this.com.navto('../../pages/index/Selected_topics?id='+this.jinx[1].id+'&type='+JSON.stringify(this.jinx))
+						uni.navigateTo({ url: '../../pages/index/Selected_topics?id='+this.jinx[1].id+'&type='+JSON.stringify(this.jinx) })
 					}
 				}
 			

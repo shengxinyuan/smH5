@@ -167,7 +167,7 @@
 					goods_id: this.shop_id,
 					count: this.buy_num,
 				}
-				this.com.navto('./confirm_payment_custom?data=' + JSON.stringify(data));
+				uni.navigateTo({ url: './confirm_payment_custom?data=' + JSON.stringify(data) });
 			},
 			//加购物车
 			addCart () {
@@ -176,7 +176,7 @@
 					count: 1,
 				}).then(res => {
 					this.popupShow = false;
-					this.com.msg(res.message)
+					uni.showToast({ icon:'none', title: res.message })
 				})
 			},
 			

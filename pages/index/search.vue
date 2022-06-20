@@ -92,17 +92,13 @@
 		},
 		methods: {
 			go_shopdetail(item) {
-				this.com.navto('../../pages/index/shop_detail?shop_id=' + item.id)
-				// if (this.isCustom) {
-				// 	this.com.navto('../../pages/index/shop_detail_custom?shop_id=' + item.id)
-				// } else {
-				// }
+				uni.navigateTo({ url: '../../pages/index/shop_detail?shop_id=' + item.id })
 			},
 			go_search(value) {
 				this.shop_list = [];
 				this.queryParams.page = 1;
 				if (value === '') {
-					this.com.msg('搜索内容不能为空')
+					uni.showToast({ icon:'none', title: '搜索内容不能为空' })
 				} else {
 					if (this.history.indexOf(value) == -1) {
 						this.history.unshift(value)

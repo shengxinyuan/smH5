@@ -23,7 +23,7 @@
 		methods:{
 			go_search(){
 				if(this.value == ''){
-					this.com.msg('搜索内容不能为空~')
+					uni.showToast({ icon:'none', title: '搜索内容不能为空~'})
 				}else{
 					this.$emit('searchClick',this.value)
 				}

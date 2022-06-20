@@ -42,10 +42,7 @@
 			but_cli(){
 				this.$api.put('info',{truename:this.name,id_number:this.user_id}).then(res=>{
 					console.log(res)
-					this.com.msg(res.message)
-					if(res.status == 1){
-						
-					}
+					uni.showToast({ icon:'none', title: res.message })
 				})
 			}
 		}

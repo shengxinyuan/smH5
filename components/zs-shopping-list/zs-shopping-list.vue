@@ -33,7 +33,7 @@
 		},
 		methods:{
 			go_shopdetail(e){
-				this.com.navto('../../pages/index/shop_detail?shop_id='+e)
+				uni.navigateTo({ url: '../../pages/index/shop_detail?shop_id='+e })
 			}
 		}
 	}

@@ -79,11 +79,11 @@
 			},
 			//订单详情
 			order_detail({id, order_type, bn_id}){
-				this.com.navto(`./orderDetails?order_id=${bn_id}&order_type=${order_type}`)
+				uni.navigateTo({ url: `./orderDetails?order_id=${bn_id}&order_type=${order_type}` })
 			},
 			cancel_detail(id){
 				this.$api.put('orders',{ id, is_h5:1 }).then(res=>{
-					this.com.msg(res.message)
+					uni.showToast({ icon:'none', title: res.message })
 					if (res.status === 1) {
 						this.queryList(1);
 					}
@@ -101,7 +101,10 @@
  			tabClick(id,index) {
 				if (id === '3d') {
 					const env = uni.getStorageSync('env');
-					const envStr = env === 'prod' ? '' : 'test-';
+					let envStr = '';
+					if (env && env !== 'prod') {
+						envStr = 'test-'
+					}
 					const queryStr = `?hideBar=1&env=${env}&member_id=${this.member_id}&token=${this.token}&h5UrlHost=${location.host}`;
 					
 					location.href = `http://${envStr}3d.semoh.cn/myOrderList${queryStr}`;

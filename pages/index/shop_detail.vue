@@ -381,16 +381,17 @@
 					is_h5:1
 				}
 				if (this.jg_ind == '') {
-					this.com.msg('请选择规格')
+					uni.showToast({ icon:'none', title: '请选择规格' })
 					return
 				} else if(this.shop_num > this.stock){
-					this.com.msg('库存不足~')
+					uni.showToast({ icon:'none', title: '库存不足~' })
 					return
 				} else {
 					this.toggleSpec() // 模态框
 					if (e == 1) {
-						this.com.navto('./confirm_payment?data=' + JSON.stringify(data))
-				
+						uni.navigateTo({
+							url: './confirm_payment?data=' + JSON.stringify(data)
+						})
 					} else {
 						this.$api.post('cart', {
 							shop_goods_id: this.shop_id,
@@ -400,7 +401,7 @@
 							member_id:uni.getStorageSync("member_id")
 						}).then(res => {
 							// console.log(res)
-							this.com.msg(res.message)
+							uni.showToast({ icon:'none', title: res.message })
 							this.skuShow = false
 						})
 					}
@@ -423,7 +424,7 @@
 			},
 
 			goto_page(e) {
-				this.com.navto(e)
+				uni.navigateTo({ url: e })
 			},
 			skipIndex(){
 				uni.reLaunch({

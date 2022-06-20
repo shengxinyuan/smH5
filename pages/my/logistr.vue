@@ -51,7 +51,7 @@
 						this.page_show = true
 						this.numList = res.data
 					}else{
-						this.com.msg('快递单号错误')
+						uni.showToast({ icon:'none', title: '快递单号错误' })
 					}
 				})
 				

@@ -74,7 +74,7 @@
 			//获取验证码
 			acquireCode(){
 				if(this.tel_value == '' || !(/^1[3456789]\d{9}$/).test(this.tel_value)){
-					this.com.msg('请检查手机号')
+					uni.showToast({ icon:'none', title: '请检查手机号' })
 				}else{
 					this.time = 60
 					this.code_show = false
@@ -102,12 +102,11 @@
 					area:this.area
 				}
 				this.$api.post('register',data).then(res=>{ 
-					this.com.msg(res.message)
+					uni.showToast({ icon:'none', title: res.message })
 					if(res.status == 1){
 						uni.navigateTo({
 							url: '/pages/login/download'
 						})
-						// this.com.navto('/pages/login/download')
 						// setTimeout(function() {
 						// 	uni.navigateTo({
 						// 		url: '/pages/login/download'

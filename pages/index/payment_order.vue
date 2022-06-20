@@ -67,7 +67,7 @@
 				uni.setClipboardData({
 				    data: e,
 				    success: function () {
-						this.com.msg('复制成功')
+						uni.showToast({ icon:'none', title: '复制成功' })
 				        console.log('success')
 				    }
 				});
@@ -83,7 +83,7 @@
 			}, 
 			order_kan(e){
 				if(e  == 1){
-					this.com.rel('./index')
+					uni.reLaunch({ url: './index' })
 				}else{
 					uni.reLaunch({ 
 						url:'/pages/my/order?state='+10+'&index='+1

@@ -73,7 +73,7 @@
 			},
 			//页面跳转
 			go_pages(e){
-				this.com.navto(e)
+				uni.navigateTo({ url: e })
 			},
 			
 			loadData(){
@@ -141,7 +141,7 @@
 				console.log(this.slist,'数据')
 			},
 			navToList(e){
-				this.com.navto('./class_detail?classify_id='+e)
+				uni.navigateTo({ url: './class_detail?classify_id='+e })
 			}
 		}
 	}

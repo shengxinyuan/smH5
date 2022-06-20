@@ -142,11 +142,15 @@
 			},
 			//退款
 			order_logist(e){
-				this.com.navto('./applyRefund?cont='+JSON.stringify(e))
+				uni.navigateTo({
+					url: './applyRefund?cont='+JSON.stringify(e)
+				})
 			},
 			//物流
 			order_logist_wl(e){
-				this.com.navto('./logistics?cont='+JSON.stringify(e))
+				uni.navigateTo({
+					url: './logistics?cont='+JSON.stringify(e)
+				})
 			}
 		}
 	}

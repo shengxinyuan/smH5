@@ -135,10 +135,10 @@
 		methods: {
 			//页面跳转
 			go_pages(e){
-				this.com.navto(e)
+				uni.navigateTo({ url: e })
 			},
 			go_pages_add(){
-				this.com.navto('../my/receiving?type=0&is_mine=0')
+				uni.navigateTo({ url: '../my/receiving?type=0&is_mine=0' })
 			},
 			// 获取自定义商品详情
 			queyGoodInfo() {

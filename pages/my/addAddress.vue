@@ -151,8 +151,7 @@
 					is_default:this.address_type
 				}
 				this.$api.post('address',data).then(res=>{
-					console.log(res)
-					this.com.msg(res.message)
+					uni.showToast({ icon:'none', title: res.message })
 					if(res.status == 1){
 						uni.navigateBack()
 					}

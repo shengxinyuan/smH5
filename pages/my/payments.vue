@@ -275,7 +275,7 @@
 				// console.log(this.img_show)
 				//余额支付判断
 				if(this.img_show == 3 && this.shop_data.menber_price - this.shop_data.shop_price <= 0){ 
-					this.com.msg('您的余额不足，请切换支付方式')
+					uni.showToast({ icon:'none', title: '您的余额不足，请切换支付方式' })
 					return false
 				}
 				//请求参数
@@ -303,7 +303,7 @@
 							}
 							
 							if(this.image_det){
-								this.com.msg('已提交审核，通过后将会发货~')
+								uni.showToast({ icon:'none', title: '已提交审核，通过后将会发货~' })
 								let aq = 2
 								let time = setInterval(()=>{
 									aq -=1
@@ -315,10 +315,10 @@
 									}
 								},1000)
 							}else{
-								this.com.msg('请上传支付成功截图')
+								uni.showToast({ icon:'none', title: '请上传支付成功截图' })
 							}
 						}else if(this.img_show == 3){
-							this.com.msg('支付成功，正在跳转到订单列表..')
+							uni.showToast({ icon:'none', title: '支付成功，正在跳转到订单列表..' })
 							let aq = 2
 							let time = setInterval(()=>{
 								aq -=1
@@ -331,7 +331,7 @@
 							},1000)
 						}
 					}else{
-						this.com.msg(res.message)
+						uni.showToast({ icon:'none', title: res.message })
 					}
 					
 				})

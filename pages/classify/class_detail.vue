@@ -132,7 +132,7 @@
 				this.get_data(this.params)
 			},
 			searchClick() {
-				this.com.navto('../index/search')
+				uni.navigateTo({ url: '../index/search' })
 			}
 		}
 	}

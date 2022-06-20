@@ -240,16 +240,16 @@
 				})
 			},
 			go_address(){
-				this.com.navto('../my/receiving?is_mine='+1)
+				uni.navigateTo({ url: '../my/receiving?is_mine='+1 })
 			},
 			//详情
 			go_shopdetail(e){
-				this.com.navto('../../pages/index/shop_detail?shop_id='+e)
+				uni.navigateTo({ url: '../../pages/index/shop_detail?shop_id='+e })
 			},
 			// 自定义详情
 			go_customDetail(e){
 				// TODO
-				// this.com.navto('../../pages/index/shop_detail?shop_id='+e)
+				// uni.navigateTo({ url: '../../pages/index/shop_detail?shop_id='+e })
 			},
 			//结算
 			skipVipConfirmOrder(){
@@ -262,7 +262,7 @@
 				// })
 				
 				if (!this.shop_list || !this.shop_list.data || !this.shop_list.data.length) {
-					return this.com.msg('没有选中的商品');
+					return uni.showToast({ icon:'none', title: '没有选中的商品' });
 				}
 				const custom = this.shop_list.data.filter((i) => !i.notCustom)
 				const normal = this.shop_list.data.filter((i) => i.notCustom)
@@ -283,7 +283,7 @@
 						throw new Error('')
 					}
 					uni.hideLoading()
-					this.com.navto('../my/order')
+					uni.navigateTo({ url: '../my/order' })
 				}).catch(() => {
 					uni.hideLoading()
 					uni.showToast({
@@ -302,7 +302,7 @@
 					}
 				})
 				if(arr == ''){
-					this.com.msg('没有选中的商品')
+					uni.showToast({ icon:'none', title: '没有选中的商品' })
 				}else{
 					uni.showModal({
 						content:'确认删除选中商品吗?',

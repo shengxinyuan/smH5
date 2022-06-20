@@ -57,19 +57,19 @@
 		methods:{
 			go_page(e){
 				if(e==0){
-					this.com.navto('../../pages/community/shop-code')
+					uni.navigateTo({ url: '../../pages/community/shop-code' })
 				}else if(e==1){
-					this.com.navto('../../pages/community/platform-ask')
+					uni.navigateTo({ url: '../../pages/community/platform-ask' })
 				}else if(e==2){
-					this.com.navto('../../pages/my/olie_course')
+					uni.navigateTo({ url: '../../pages/my/olie_course' })
 				}else if(e==3){
-					this.com.navto('../../pages/my/fankui')
+					uni.navigateTo({ url: '../../pages/my/fankui' })
 				}else if(e==4){
-					this.com.navto('../../pages/my/aboutus')
+					uni.navigateTo({ url: '../../pages/my/aboutus' })
 				}else if(e==5){
-					this.com.navto('../../pages/service/service')
+					uni.navigateTo({ url: '../../pages/service/service' })
 				}else if(e==6){
-					this.com.navto('../../pages/community/platform-gold-prices')
+					uni.navigateTo({ url: '../../pages/community/platform-gold-prices' })
 				}
 			}
 		}

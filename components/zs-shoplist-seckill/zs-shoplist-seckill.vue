@@ -62,15 +62,13 @@
 			go_shopdetail(e){
 				if(this.titles){
 					if(this.titles == '抢购中' ){
-						this.com.navto('../../pages/index/Activityshop_detail?shop_id='+e+'&type='+this.types+'&second='+this.second)
+						uni.navigateTo({ url: '../../pages/index/Activityshop_detail?shop_id='+e+'&type='+this.types+'&second='+this.second })
 					}else{
-						this.com.msg('本轮秒杀已经结束，请期待下一期')
+						uni.showToast({ icon:'none', title: '本轮秒杀已经结束，请期待下一期' })
 					}
 				}else{
-					this.com.navto('../../pages/index/Activityshop_detail?shop_id='+e+'&type='+this.types)
+					uni.navigateTo({ url: '../../pages/index/Activityshop_detail?shop_id='+e+'&type='+this.types })
 				}
-				
-				
 			},
 			cli_type(e){
 				console.log(e)

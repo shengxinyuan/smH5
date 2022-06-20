@@ -88,7 +88,9 @@
 			},
 			//售后
 			shouh(){
-				this.com.navto('../service/service')
+				uni.navigateTo({
+					url: '../service/service'
+				})
 			},
 			//确认收货
 			sure_details(e){
@@ -114,9 +116,9 @@
 			shen_details(e){
 				this.$api.put('orderreturn',{id:e}).then(res=>{
 					if(res.status == 1){
-						this.com.tab('./order?state='+ 50 +'&index='+ 5)
+						uni.switchTab({ url: './order?state='+ 50 +'&index='+ 5 })
 					}else{
-						this.com.msg(res.message)
+						uni.showToast({ icon:'none', title: res.message })
 					}
 				})
 			},
@@ -130,7 +132,6 @@
 			},
 			// 评论
 			go_immed(e){
-				// this.com.navto('../my/evaluate?list='+JSON.stringify(e))
 				uni.navigateTo({
 					url:'../my/evaluate?list='+JSON.stringify(e)
 				})
@@ -141,11 +142,15 @@
 			},
 			//退款
 			order_logist(e){
-				this.com.navto('./applyRefund?cont='+JSON.stringify(e))
+				uni.navigateTo({
+					url: './applyRefund?cont='+JSON.stringify(e)
+				})
 			},
 			//物流
 			order_logist_wl(e){
-				this.com.navto('./logistr?cont='+e)
+				uni.navigateTo({
+					url: './logistr?cont='+e
+				})
 			}
 		}
 	}
