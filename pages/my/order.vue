@@ -107,7 +107,7 @@
 					}
 					const queryStr = `?hideBar=1&env=${env}&member_id=${this.member_id}&token=${this.token}&h5UrlHost=${location.host}`;
 					
-					location.href = `http://${envStr}3d.semoh.cn/myOrderList${queryStr}`;
+					location.href = `https://${envStr}3d.semoh.cn/myOrderList${queryStr}`;
 					return
 				}
 				this.page_show = false

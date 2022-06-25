@@ -1,5 +1,5 @@
 {
-    "name" : "珠宝网店",
+    "name" : "",
     "appid" : "__UNI__07CF611",
     "description" : "奢侈品交易平台",
     "versionName" : "1.0.2",
@@ -147,8 +147,8 @@
         "enable" : false
     },
     "h5" : {
-        "title" : "奢美饰界",
-        "domain" : "http://test-h5.semoh.cn/",
+        "title" : "",
+        "domain" : "https://h5.semoh.cn/",
         "optimization" : {
             "treeShaking" : {
                 "enable" : false
