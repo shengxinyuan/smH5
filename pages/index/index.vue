@@ -209,7 +209,7 @@
 		},
 		methods: {
 			getData(params) {
-				const { name, token, id, type, env } = params;
+				const { name, token, id, type, env, go3D } = params;
 				this.member_id = name;
 				if (this.member_id) {
 					uni.setStorageSync('member_id', name);
@@ -226,6 +226,11 @@
 					const hasGoDetail = Window.hasGoDetail;
 					setTimeout(() => {
 						!hasGoDetail && this.go_sm_detail(id)
+					}, 200)
+				}
+				if (go3D) {
+					setTimeout(() => {
+						this.go_3D()
 					}, 200)
 				}
 			},
@@ -290,6 +295,19 @@
 			// 每周上线进详情
 			go_sm_detail(id) {
 				uni.navigateTo({url: `/pages/index/shop_detail?shop_id=${id}`})
+			},
+			go_3D() {
+				const token = uni.getStorageSync('token');
+				const member_id = uni.getStorageSync('member_id');
+				const env = uni.getStorageSync('env');
+				
+				let envStr = '';
+				if (env && env !== 'prod') {
+					envStr = 'test-'
+				}
+				const queryStr = `?hideBar=1&env=${env}&member_id=${member_id}&token=${token}&h5UrlHost=${location.host}`;
+				
+				location.replace(`https://${envStr}3d.semoh.cn${queryStr}`);
 			},
 			urlParse() {
 				let url = window.location.search;
