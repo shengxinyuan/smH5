@@ -12,8 +12,8 @@
 			<u-search bg-color="#fff" placeholder="搜索商品" v-model="keyword" :show-action="false" :disabled="true" @click="search"></u-search>
 		</view>
 
-		<view class="king_backimg">
-			<u-swiper :list="banner_list" height="400"></u-swiper>
+		<view class="king_backimg" >
+			<u-swiper :list="banner_list" height="400" @click="go_shop_url"></u-swiper>
 		</view>
 		
 		<!-- 实时金价 -->
@@ -179,6 +179,7 @@
 				min_g: '', //最小重量
 				max_g: '', //最大重量
 				inApp: false,
+				shop_url: '',
 			}
 		},
 		onUnload() {
@@ -498,6 +499,7 @@
 						} else {
 							this.banner_list = [{image: 'https://img.alicdn.com/imgextra/i3/O1CN01ywGbA51tlwYSmJGWI_!!6000000005943-0-tps-1170-859.jpg'}]
 						}
+						this.shop_url = res.data.shop_url
 					}
 				})
 				this.$api.get('screen_label').then(res => {
@@ -513,6 +515,10 @@
 						this.index_data = res.data
 					}
 				})
+			},
+			go_shop_url() {
+				
+				location.href = this.shop_url
 			},
 			// 跳转产品详情
 			go_shopdetail(item) {
